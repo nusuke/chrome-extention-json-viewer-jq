@@ -1,37 +1,12 @@
 import { isJSON } from "./lib/isJson";
-import { convertJSONToHTML } from "./lib/jsonViewer/convertJSONToHTML";
-import {
-  getSurroundCharactor,
-  surroundParentheses,
-} from "./lib/jsonViewer/parentheses";
+import { jsonPreview } from "./feature/jsonPreview/jsonPreview";
+import { jq } from "./feature/jq/jq";
 
-(async () => {
-  if (!isJSON(document)) {
-    console.log("this document is not json.");
-    return;
-  }
+const main = () => {
+  if (!isJSON(document)) return;
 
-  const targetElement = document.getElementsByTagName("pre");
-  if (!targetElement) return;
-  const jsonString = targetElement[0].innerText;
-  if (!jsonString) return;
+  jsonPreview();
+  jq();
+};
 
-  let targetJson: JSON | undefined;
-  try {
-    targetJson = JSON.parse(jsonString);
-  } catch (e) {
-    console.error(e);
-    return;
-  }
-  if (targetJson === undefined) return;
-  await chrome.runtime.sendMessage({ type: "road", text: jsonString });
-
-  targetElement[0].remove();
-
-  const surruondChar = getSurroundCharactor(targetJson);
-  // FIXME XSS
-  document.body.innerHTML = surroundParentheses(
-    convertJSONToHTML(targetJson),
-    surruondChar
-  );
-})();
+main();

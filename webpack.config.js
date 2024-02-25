@@ -14,6 +14,16 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    alias: {
+      "jq-web": path.resolve("./node_modules/jq-web"),
+    },
+    fallback: {
+      crypto: require.resolve("crypto-browserify"),
+      fs: false,
+      buffer: false,
+      path: false,
+      stream: false,
+    },
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -22,7 +32,8 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: "manifest.json", to: "" },
-        { from: "src/assets", to: "" },
+        { from: "assets", to: "" },
+        { from: "node_modules/jq-web/jq.wasm.wasm", to: "" },
       ],
     }),
   ],
