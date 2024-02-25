@@ -8,7 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+const isJson_1 = require("./lib/isJson");
 (() => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(0, isJson_1.isJSON)(document)) {
+        return;
+    }
     const targetElement = document.getElementsByTagName("pre");
     if (!targetElement)
         return;
@@ -20,6 +25,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         targetJson = JSON.parse(jsonString);
     }
     catch (e) {
+        console.log("JSONでは無いのでSKIP");
         console.error(e);
         return;
     }
@@ -38,7 +44,7 @@ function formatJson(obj, indent = 2) {
     let result = "";
     for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
-            result += `<div class="jsonKey">${key}:</div><pre>${JSON.stringify(obj[key], null, indent)}</pre>`;
+            result += `<pre><span class="jsonKey">${key}:</span>${JSON.stringify(obj[key], null, indent)}</pre>`;
         }
     }
     return result;
