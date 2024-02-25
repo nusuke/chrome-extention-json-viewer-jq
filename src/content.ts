@@ -2,6 +2,7 @@ import { isJSON } from "./lib/isJson";
 
 (async () => {
   if (!isJSON(document)) {
+    console.log("this document is not json.");
     return;
   }
 

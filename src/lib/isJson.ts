@@ -1,3 +1,3 @@
 export const isJSON = (document: Document) => {
-  return document.contentType === "appliaction/json";
+  return document.contentType === "application/json";
 };
