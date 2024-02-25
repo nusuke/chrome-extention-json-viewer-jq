@@ -61,5 +61,5 @@ function getSurroundCharactor(value: unknown): SurroundChars {
 }
 
 function surroundParentheses(text: string, surroundChars: SurroundChars) {
-  return `<span class="surroundChar--start">${surroundChars.start}</span>${text}<span class="surroundChar--end">${surroundChars.end}</span>`;
+  return `<span class="surroundChar--start">${surroundChars.start}</span><span class="jsonObject">${text}</span><span class="surroundChar--end">${surroundChars.end}</span>`;
 }
