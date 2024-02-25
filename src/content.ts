@@ -1,6 +1,5 @@
 import { isJSON } from "./lib/isJson";
 import { jsonPreview } from "./feature/jsonPreview/jsonPreview";
-import { jq } from "./feature/jq/jq";
 
 const main = () => {
   if (!isJSON(document)) return;
@@ -21,7 +20,7 @@ const main = () => {
   jsonPreview(targetJson);
 
   // targetElement[0].remove();
-  jq();
+  // jq();
 };
 
 main();

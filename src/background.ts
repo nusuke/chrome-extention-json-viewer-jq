@@ -1,3 +1,5 @@
+import jq from "jq-web/jq.wasm.js";
+
 type MessageType = {
   type: "road";
   text: string;
@@ -29,6 +31,24 @@ chrome.runtime.onMessage.addListener(
 
         // const key = "json";
         // chrome.storage.session.set({ [key]: json }).then(sendResponse);
+
+        console.log("jq", text);
+
+        const jqQuery = ".contact";
+        const res = jq.json(text, jqQuery);
+        console.log(jq.json({ a: "a", b: "b" }, ".a"));
+        console.log(
+          jq.json(
+            {
+              a: {
+                big: {
+                  json: ["full", "of", "important", "things"],
+                },
+              },
+            },
+            '.a.big.json | ["empty", .[1], "useless", .[3]] | join(" ")'
+          )
+        );
 
         return true;
       } catch (e) {

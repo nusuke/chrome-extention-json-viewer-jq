@@ -33,7 +33,7 @@ module.exports = {
       patterns: [
         { from: "manifest.json", to: "" },
         { from: "assets", to: "" },
-        // { from: "node_modules/jq-web/jq.wasm.wasm", to: "" },
+        { from: "node_modules/jq-web/jq.wasm.wasm", to: "" },
       ],
     }),
   ],
