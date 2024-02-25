@@ -17,10 +17,25 @@ chrome.action.onClicked.addListener((tab) => __awaiter(void 0, void 0, void 0, f
         target: { tabId: tab.id },
     });
 }));
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     console.log("message 受信", message);
-    if (message.greeting === "tip") {
-        chrome.storage.local.get("tip").then(sendResponse);
-        return true;
+    if (!((_a = sender.tab) === null || _a === void 0 ? void 0 : _a.id))
+        return;
+    if (message.type == "road") {
+        const text = message.text;
+        try {
+            // const json = JSON.parse(text);
+            yield chrome.scripting.insertCSS({
+                files: ["json-preview.css"],
+                target: { tabId: sender.tab.id },
+            });
+            // const key = "json";
+            // chrome.storage.session.set({ [key]: json }).then(sendResponse);
+            return true;
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
-});
+}));
