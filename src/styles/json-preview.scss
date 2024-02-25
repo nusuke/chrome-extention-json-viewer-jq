@@ -6,17 +6,18 @@
 .jsonKey {
   color: green;
   font-size: bold;
-}
-.jsonKey::after {
-  content: ":";
+
+  &::after {
+    content: ":";
+  }
 }
 
 .jsonValue {
   margin-left: 8px;
-}
-.jsonValue::after {
-  content: ",\A";
-  white-space: pre;
+  &::after {
+    content: ",\A";
+    white-space: pre;
+  }
 }
 
 .jsonMiddleKey {

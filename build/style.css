@@ -1,0 +1,1 @@
+.jsonObject{display:block;padding-left:20px}.jsonKey{color:green;font-size:bold}.jsonKey::after{content:":"}.jsonValue{margin-left:8px}.jsonValue::after{content:",\a";white-space:pre}.jsonMiddleKey{padding-left:20px;display:block}.surroundChar--start::after{padding-left:-20px;content:"\a";white-space:pre}

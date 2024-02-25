@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener(
         // const json = JSON.parse(text);
 
         await chrome.scripting.insertCSS({
-          files: ["json-preview.css"],
+          files: ["style.css"],
           target: { tabId: sender.tab.id },
         });
 
