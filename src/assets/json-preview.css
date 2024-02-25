@@ -1,3 +1,46 @@
 .jsonKey {
   color: green;
+  font-size: bold;
 }
+.jsonKey::after {
+  content: ":";
+}
+
+.jsonValue {
+  margin-left: 8px;
+}
+.jsonValue::after {
+  content: ",\A";
+  white-space: pre;
+}
+
+.jsonMiddleKey {
+  padding-left: 20px;
+  display: block;
+}
+/* .jsonMiddleKey::before {
+  padding-left: -20px;
+  content: "\A";
+  white-space: pre;
+}
+.jsonMiddleKey::after {
+  padding-left: -20px;
+  content: ",\A";
+  white-space: pre;
+} */
+
+/* .surroundChar--start::before {
+  padding-left: -20px;
+  content: "\A";
+  white-space: pre;
+} */
+.surroundChar--start::after {
+  padding-left: -20px;
+  content: "\A";
+  white-space: pre;
+}
+/* .surroundChar--end::after {
+  padding-left: -20px;
+  content: "\A,\A";
+  white-space: pre;
+} */

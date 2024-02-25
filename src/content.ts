@@ -11,11 +11,10 @@ import { isJSON } from "./lib/isJson";
   const jsonString = targetElement[0].innerText;
   if (!jsonString) return;
 
-  let targetJson: { [key: string]: any } | undefined;
+  let targetJson: JSON | undefined;
   try {
     targetJson = JSON.parse(jsonString);
   } catch (e) {
-    console.log("JSONでは無いのでSKIP");
     console.error(e);
     return;
   }
@@ -24,22 +23,43 @@ import { isJSON } from "./lib/isJson";
 
   targetElement[0].remove();
 
+  const surruondChar = getSurroundCharactor(targetJson);
   // FIXME XSS
-  document.body.innerHTML = formatJson(targetJson);
+  document.body.innerHTML = surroundParentheses(
+    convertJSONToHTML(targetJson),
+    surruondChar
+  );
 })();
 
-function formatJson(obj: any, indent = 2) {
-  let result = "";
+function convertJSONToHTML(json: JSON) {
+  let html = "";
 
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      result += `<pre><span class="jsonKey">${key}:</span>${JSON.stringify(
-        obj[key],
-        null,
-        indent
-      )}</pre>`;
+  for (const [key, value] of Object.entries(json)) {
+    html += `<span class="jsonKey">${key}</span>`;
+    if (typeof value === "object") {
+      const surruondChar = getSurroundCharactor(value);
+      html += `<span class="jsonMiddleKey">${surroundParentheses(
+        convertJSONToHTML(value),
+        surruondChar
+      )}</span>`;
+    } else {
+      html += `<span class="jsonValue">${value}</span>`;
     }
   }
+  return html;
+}
 
-  return result;
+type SurroundChars = { start: string; end: string };
+function getSurroundCharactor(value: unknown): SurroundChars {
+  if (Array.isArray(value)) {
+    return { start: "[", end: "]" };
+  } else if (typeof value === "object") {
+    return { start: "{", end: "}" };
+  } else {
+    return { start: "", end: "" };
+  }
+}
+
+function surroundParentheses(text: string, surroundChars: SurroundChars) {
+  return `<span class="surroundChar--start">${surroundChars.start}</span>${text}<span class="surroundChar--end">${surroundChars.end}</span>`;
 }
