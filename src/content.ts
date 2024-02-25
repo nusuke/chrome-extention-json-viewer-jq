@@ -1,4 +1,9 @@
 import { isJSON } from "./lib/isJson";
+import { convertJSONToHTML } from "./lib/jsonViewer/convertJSONToHTML";
+import {
+  getSurroundCharactor,
+  surroundParentheses,
+} from "./lib/jsonViewer/parentheses";
 
 (async () => {
   if (!isJSON(document)) {
@@ -30,36 +35,3 @@ import { isJSON } from "./lib/isJson";
     surruondChar
   );
 })();
-
-function convertJSONToHTML(json: JSON) {
-  let html = "";
-
-  for (const [key, value] of Object.entries(json)) {
-    html += `<span class="jsonKey">${key}</span>`;
-    if (typeof value === "object") {
-      const surruondChar = getSurroundCharactor(value);
-      html += `<span class="jsonMiddleKey">${surroundParentheses(
-        convertJSONToHTML(value),
-        surruondChar
-      )}</span>`;
-    } else {
-      html += `<span class="jsonValue">${value}</span>`;
-    }
-  }
-  return html;
-}
-
-type SurroundChars = { start: string; end: string };
-function getSurroundCharactor(value: unknown): SurroundChars {
-  if (Array.isArray(value)) {
-    return { start: "[", end: "]" };
-  } else if (typeof value === "object") {
-    return { start: "{", end: "}" };
-  } else {
-    return { start: "", end: "" };
-  }
-}
-
-function surroundParentheses(text: string, surroundChars: SurroundChars) {
-  return `<span class="surroundChar--start">${surroundChars.start}</span><span class="jsonObject">${text}</span><span class="surroundChar--end">${surroundChars.end}</span>`;
-}
