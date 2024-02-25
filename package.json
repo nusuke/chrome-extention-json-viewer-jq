@@ -4,12 +4,13 @@
   "description": "JSON  viewer + jq filter",
   "main": "index.js",
   "scripts": {
-		"build": "tsc && cp manifest.json build && cp -r src/assets/ build",
+    "build": "rm -rf build && tsc && cp manifest.json build && cp -r src/assets/ build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/chrome": "^0.0.261",
     "typescript": "^5.3.3"
   }
 }
