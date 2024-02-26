@@ -5,15 +5,6 @@ type MessageType = {
   text: string;
 };
 const key = "json";
-// 拡張のアイコンをクリックした際
-chrome.action.onClicked.addListener(async (tab) => {
-  if (tab.id === undefined) return;
-
-  await chrome.scripting.insertCSS({
-    files: ["json-preview.css"],
-    target: { tabId: tab.id },
-  });
-});
 
 chrome.runtime.onMessage.addListener(
   async (message: MessageType, sender, sendResponse) => {
@@ -31,21 +22,27 @@ chrome.runtime.onMessage.addListener(
         });
 
         await chrome.storage.session.set({ [key]: JSON.stringify(json) });
-
-        return true;
       } catch (e) {
         console.error(e);
       }
     } else if (message.type == "query") {
-      console.log(message);
+      // jq filtering
       const jqQuery = message.text;
       const json = JSON.parse(
         JSON.parse(JSON.stringify(await chrome.storage.session.get(key))).json
       );
 
-      console.log(json);
       const res = jq.json(json, jqQuery);
       console.log("結果::", res);
+
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        lastFocusedWindow: true,
+      });
+      if (!tab.id) return;
+      chrome.tabs.sendMessage(tab.id, {
+        filteredJSON: res,
+      });
     }
   }
 );

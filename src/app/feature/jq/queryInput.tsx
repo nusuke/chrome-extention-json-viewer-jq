@@ -1,14 +1,19 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-type P = {
-  changeHandle: Dispatch<SetStateAction<{ json: JSON }>>;
-};
-export const QueryInput: React.FC<P> = (props) => {
+type P = {};
+export const QueryInput: React.FC<P> = () => {
   const [jqQuery, setJqQuery] = useState(".");
 
   useEffect(() => {
     console.log(jqQuery);
-    chrome.runtime.sendMessage({ type: "query", text: jqQuery });
+    chrome.runtime
+      .sendMessage({
+        type: "query",
+        text: jqQuery,
+      })
+      .then((res) => {
+        console.log(res);
+      });
   }, [jqQuery]);
   return (
     <>

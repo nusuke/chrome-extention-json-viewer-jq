@@ -1,8 +1,5 @@
 import { isJSON } from "./lib/isJson";
-import { JsonPreview } from "./app/feature/jsonPreview/jsonPreview";
 import { createRoot } from "react-dom/client";
-import { QueryInput } from "./app/feature/jq/queryInput";
-import { createContext, useContext, useState } from "react";
 import { App } from "./app/app";
 
 const main = () => {
