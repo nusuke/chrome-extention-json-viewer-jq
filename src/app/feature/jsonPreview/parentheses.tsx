@@ -21,8 +21,14 @@ export function getSurroundCharactor(value: unknown): SurroundChars {
  * @returns
  */
 export function surroundParentheses(
-  text: string,
+  text: JSX.Element[],
   surroundChars: SurroundChars
 ) {
-  return `<span class="surroundChar--start">${surroundChars.start}</span><span class="jsonObject">${text}</span><span class="surroundChar--end">${surroundChars.end}</span>`;
+  return (
+    <>
+      <span className="surroundChar--start">{surroundChars.start}</span>
+      <span className="jsonObject">{text}</span>
+      <span className="surroundChar--end">{surroundChars.end}</span>
+    </>
+  );
 }

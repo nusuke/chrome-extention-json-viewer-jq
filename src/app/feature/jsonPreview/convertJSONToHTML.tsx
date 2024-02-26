@@ -6,19 +6,20 @@ import { getSurroundCharactor, surroundParentheses } from "./parentheses";
  * @returns
  */
 export function convertJSONToHTML(json: JSON) {
-  let html = "";
+  const nodes = [];
 
   for (const [key, value] of Object.entries(json)) {
-    html += `<span class="jsonKey">${key}</span>`;
+    nodes.push(<span className="jsonKey">{key}</span>);
     if (typeof value === "object") {
       const surruondChar = getSurroundCharactor(value);
-      html += `<span class="jsonMiddleKey">${surroundParentheses(
-        convertJSONToHTML(value),
-        surruondChar
-      )}</span>`;
+      nodes.push(
+        <span className="jsonMiddleKey">
+          {surroundParentheses(convertJSONToHTML(value), surruondChar)}
+        </span>
+      );
     } else {
-      html += `<span class="jsonValue">${value}</span>`;
+      nodes.push(<span className="jsonValue">{value}</span>);
     }
   }
-  return html;
+  return nodes;
 }
