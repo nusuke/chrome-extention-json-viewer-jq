@@ -1,3 +1,3 @@
-declare module "jq-web/jq.asm.bundle.js" {
-  function json(json: JSON, jqQuery: string): string | undefined | null;
+declare module "jq-web/jq.wasm.js" {
+  function json(json: unknown, jqQuery: string): string | undefined | null;
 }
