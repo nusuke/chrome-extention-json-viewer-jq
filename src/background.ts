@@ -36,19 +36,7 @@ chrome.runtime.onMessage.addListener(
 
         const jqQuery = ".contact";
         const res = jq.json(text, jqQuery);
-        console.log(jq.json({ a: "a", b: "b" }, ".a"));
-        console.log(
-          jq.json(
-            {
-              a: {
-                big: {
-                  json: ["full", "of", "important", "things"],
-                },
-              },
-            },
-            '.a.big.json | ["empty", .[1], "useless", .[3]] | join(" ")'
-          )
-        );
+        console.log(res);
 
         return true;
       } catch (e) {
