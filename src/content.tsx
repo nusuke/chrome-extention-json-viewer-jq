@@ -1,5 +1,6 @@
 import { isJSON } from "./lib/isJson";
-import { jsonPreview } from "./feature/jsonPreview/jsonPreview";
+import { createRoot } from "react-dom/client";
+import { App } from "./app/app";
 
 const main = () => {
   if (!isJSON(document)) return;
@@ -17,10 +18,9 @@ const main = () => {
     return;
   }
   if (targetJson === undefined) return;
-  jsonPreview(targetJson);
 
-  // targetElement[0].remove();
-  // jq();
+  const root = createRoot(document.body);
+  root.render(<App targetJson={targetJson} />);
 };
 
 main();

@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   entry: {
     background: "./src/background.ts",
-    content: "./src/content.ts",
+    content: "./src/content.tsx",
     style: "./src/styles/json-preview.scss",
   },
   output: {
@@ -13,7 +13,7 @@ module.exports = {
     filename: "[name].js",
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts", ".js", ".jsx", ".tsx"],
     alias: {
       "jq-web": path.resolve("./node_modules/jq-web"),
     },
@@ -44,7 +44,7 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
       {
-        test: /\.ts$/,
+        test: /\.tsx?$/,
         use: "ts-loader",
         exclude: /node_modules/,
       },
