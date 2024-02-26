@@ -19,7 +19,7 @@ export const QueryInput: React.FC<P> = () => {
     <>
       <input
         type="text"
-        placeholder="jq query"
+        placeholder="jq query. ex: keys"
         className="queryInput"
         onChange={(e) => {
           setJqQuery(e.currentTarget.value);

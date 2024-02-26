@@ -28,21 +28,25 @@ chrome.runtime.onMessage.addListener(
     } else if (message.type == "query") {
       // jq filtering
       const jqQuery = message.text;
-      const json = JSON.parse(
-        JSON.parse(JSON.stringify(await chrome.storage.session.get(key))).json
-      );
+      try {
+        const json = JSON.parse(
+          JSON.parse(JSON.stringify(await chrome.storage.session.get(key))).json
+        );
 
-      const res = jq.json(json, jqQuery);
-      console.log("結果::", res);
+        const res = jq.json(json, jqQuery);
+        console.log("結果::", res);
 
-      const [tab] = await chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true,
-      });
-      if (!tab.id) return;
-      chrome.tabs.sendMessage(tab.id, {
-        filteredJSON: res,
-      });
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          lastFocusedWindow: true,
+        });
+        if (!tab.id) return;
+        chrome.tabs.sendMessage(tab.id, {
+          filteredJSON: res,
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 );
