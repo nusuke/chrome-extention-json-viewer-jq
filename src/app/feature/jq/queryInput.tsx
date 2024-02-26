@@ -3,8 +3,8 @@ import { useDebounce } from "./useDebuonce";
 
 type P = {};
 export const QueryInput: React.FC<P> = () => {
-  const [jqQuery, setJqQuery] = useState(".");
-  const debouncedInputText = useDebounce(jqQuery, 200);
+  const [jqQuery, setJqQuery] = useState<string | undefined>(undefined);
+  const debouncedInputText = useDebounce(jqQuery ?? "", 200);
 
   useEffect(() => {
     chrome.runtime.sendMessage({

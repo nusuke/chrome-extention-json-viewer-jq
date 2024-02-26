@@ -1,3 +1,10 @@
+body {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .jsonObject {
   display: block;
   padding-left: 20px;
@@ -33,9 +40,9 @@
 
 // FIXME リファクタで場所を移す
 .queryInput {
-  width: 100%;
+  width: 90%;
   background: white;
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 8px;
+  padding: 8px 16px;
   color: black;
 }
