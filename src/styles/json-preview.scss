@@ -11,9 +11,7 @@ body {
 }
 
 .jsonKey {
-  color: green;
-  font-size: bold;
-  // display: block;
+  color: lightsteelblue;
 
   &::after {
     content: " : ";
@@ -33,22 +31,24 @@ body {
   }
   &--string {
     color: lightgreen;
+    &::before,
+    &::after {
+      content: '"';
+    }
   }
 }
 
 .jsonMiddleKey {
   padding-left: 20px;
   display: block;
+}
 
-  summary {
-    color: gray;
-  }
+summary {
+  color: gray;
 }
 
 .surroundChar--start::after {
   padding-left: -20px;
-  content: "\A";
-  white-space: pre;
 }
 
 // FIXME リファクタで場所を移す

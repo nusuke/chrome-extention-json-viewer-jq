@@ -7,7 +7,7 @@
     "default_icon": "icon-test.png"
   },
   "host_permissions": ["http://*/*", "https://*/*"],
-  "permissions": ["activeTab", "scripting", "storage"],
+  "permissions": ["activeTab", "scripting", "storage", "clipboardWrite"],
   "background": {
     "service_worker": "background.js"
   },
