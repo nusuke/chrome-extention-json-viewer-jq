@@ -13,6 +13,7 @@ body {
 .jsonKey {
   color: green;
   font-size: bold;
+  // display: block;
 
   &::after {
     content: " : ";
@@ -38,6 +39,10 @@ body {
 .jsonMiddleKey {
   padding-left: 20px;
   display: block;
+
+  summary {
+    color: gray;
+  }
 }
 
 .surroundChar--start::after {
