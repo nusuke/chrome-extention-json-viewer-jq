@@ -15,7 +15,8 @@ body {
   font-size: bold;
 
   &::after {
-    content: ":";
+    content: " : ";
+    color: white;
   }
 }
 
@@ -24,6 +25,13 @@ body {
   &::after {
     content: ",\A";
     white-space: pre;
+  }
+
+  &--number {
+    color: antiquewhite;
+  }
+  &--string {
+    color: lightgreen;
   }
 }
 
