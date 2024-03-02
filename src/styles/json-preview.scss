@@ -36,6 +36,12 @@ body {
       content: '"';
     }
   }
+  &--url {
+    &::before,
+    &::after {
+      content: '"';
+    }
+  }
 }
 
 .jsonMiddleKey {
