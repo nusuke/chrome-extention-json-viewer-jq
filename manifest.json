@@ -4,7 +4,7 @@
   "description": "WIP",
   "version": "1.0",
   "action": {
-    "default_icon": "icon-test.png"
+    "default_icon": "logo.png"
   },
   "host_permissions": ["http://*/*", "https://*/*"],
   "permissions": ["activeTab", "scripting", "storage", "clipboardWrite"],
