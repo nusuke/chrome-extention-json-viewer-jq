@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "JSON viewer & jq",
-  "description": "WIP",
+  "name": "JSON viewer +jq",
+  "description": "ブラウザ上でjqによる絞り込みを行えます。jqクエリをURLで共有することもできます。",
   "version": "1.0",
   "action": {
     "default_icon": "logo.png"
   },
   "host_permissions": ["http://*/*", "https://*/*"],
-  "permissions": ["activeTab", "scripting", "storage", "clipboardWrite"],
+  "permissions": ["activeTab", "scripting", "storage"],
   "background": {
     "service_worker": "background.js"
   },

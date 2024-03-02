@@ -19,8 +19,11 @@ const main = () => {
   }
   if (targetJson === undefined) return;
 
+  const url = new URL(document.URL);
+  const initialJqQuery = url.searchParams.get("chromeExtentionJqQuery") ?? ".";
+
   const root = createRoot(document.body);
-  root.render(<App targetJson={targetJson} />);
+  root.render(<App targetJson={targetJson} initialJqQuery={initialJqQuery} />);
 };
 
 main();

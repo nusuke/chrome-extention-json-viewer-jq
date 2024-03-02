@@ -59,9 +59,16 @@ summary {
 
 // FIXME リファクタで場所を移す
 .queryInput {
-  width: 90%;
-  background: white;
-  border-radius: 8px;
-  padding: 8px 16px;
-  color: black;
+  display: flex;
+  &Input {
+    width: 90%;
+    background: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: black;
+  }
+
+  &ShareButton {
+    background: rgb(150, 150, 239);
+  }
 }

@@ -3,7 +3,7 @@ import { QueryInput } from "./feature/jq/queryInput";
 import { JsonPreview } from "./feature/jsonPreview/jsonPreview";
 import { logger } from "../lib/logger";
 
-type P = { targetJson: JSON };
+type P = { targetJson: JSON; initialJqQuery: string };
 export const App: React.FC<P> = (props) => {
   const [targetJSON, setTargetJson] = useState(props.targetJson);
 
@@ -32,22 +32,8 @@ export const App: React.FC<P> = (props) => {
 
   return (
     <>
-      <QueryInput />
+      <QueryInput initialJqQuery={props.initialJqQuery} />
       <JsonPreview targetJson={targetJSON} />
-      <button
-        onClick={() => {
-          navigator.clipboard.writeText(JSON.stringify(targetJSON)).then(
-            () => {
-              /* clipboard successfully set */
-            },
-            () => {
-              /* clipboard write failed */
-            }
-          );
-        }}
-      >
-        📝
-      </button>
     </>
   );
 };
