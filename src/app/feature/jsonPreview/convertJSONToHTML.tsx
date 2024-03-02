@@ -18,8 +18,35 @@ export function convertJSONToHTML(json: JSON) {
         </span>
       );
     } else {
-      nodes.push(<span className="jsonValue">{value}</span>);
+      nodes.push(
+        <span className="jsonValue">{convertJsonValueToHTML(value)}</span>
+      );
     }
   }
   return nodes;
+}
+
+/**
+ * jsonのValueを文字列、数値、URLで付与するclassを変える
+ * @param value
+ * @returns
+ */
+function convertJsonValueToHTML(value: unknown) {
+  if (typeof value === "number") {
+    return <span className="jsonValue--number">{value}</span>;
+  } else if (typeof value === "string") {
+    if (URL.canParse(value)) {
+      return (
+        <span className="jsonValue--url">
+          <a href={value} target="_blank">
+            {value}
+          </a>
+        </span>
+      );
+    } else {
+      return <span className="jsonValue--string">{value}</span>;
+    }
+  } else {
+    console.log("unexpected value.", value);
+  }
 }

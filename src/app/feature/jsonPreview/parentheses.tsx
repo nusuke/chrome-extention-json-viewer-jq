@@ -27,7 +27,10 @@ export function surroundParentheses(
   return (
     <>
       <span className="surroundChar--start">{surroundChars.start}</span>
-      <span className="jsonObject">{text}</span>
+      <details open={true}>
+        <summary></summary>
+        <span className="jsonObject">{text}</span>
+      </details>
       <span className="surroundChar--end">{surroundChars.end}</span>
     </>
   );

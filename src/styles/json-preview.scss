@@ -11,11 +11,11 @@ body {
 }
 
 .jsonKey {
-  color: green;
-  font-size: bold;
+  color: lightsteelblue;
 
   &::after {
-    content: ":";
+    content: " : ";
+    color: white;
   }
 }
 
@@ -25,6 +25,23 @@ body {
     content: ",\A";
     white-space: pre;
   }
+
+  &--number {
+    color: antiquewhite;
+  }
+  &--string {
+    color: lightgreen;
+    &::before,
+    &::after {
+      content: '"';
+    }
+  }
+  &--url {
+    &::before,
+    &::after {
+      content: '"';
+    }
+  }
 }
 
 .jsonMiddleKey {
@@ -32,10 +49,12 @@ body {
   display: block;
 }
 
+summary {
+  color: gray;
+}
+
 .surroundChar--start::after {
   padding-left: -20px;
-  content: "\A";
-  white-space: pre;
 }
 
 // FIXME リファクタで場所を移す

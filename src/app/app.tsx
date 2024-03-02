@@ -33,6 +33,20 @@ export const App: React.FC<P> = (props) => {
     <>
       <QueryInput />
       <JsonPreview targetJson={targetJSON} />
+      <button
+        onClick={() => {
+          navigator.clipboard.writeText(JSON.stringify(targetJSON)).then(
+            () => {
+              /* clipboard successfully set */
+            },
+            () => {
+              /* clipboard write failed */
+            }
+          );
+        }}
+      >
+        📝
+      </button>
     </>
   );
 };
