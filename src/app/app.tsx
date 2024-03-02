@@ -1,6 +1,7 @@
 import { useState, createContext, useEffect } from "react";
 import { QueryInput } from "./feature/jq/queryInput";
 import { JsonPreview } from "./feature/jsonPreview/jsonPreview";
+import { logger } from "../lib/logger";
 
 type P = { targetJson: JSON };
 export const App: React.FC<P> = (props) => {
@@ -8,7 +9,7 @@ export const App: React.FC<P> = (props) => {
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener(function (request) {
-      console.log(request);
+      logger.debug(request);
       if (
         typeof request.filteredJSON === "string" ||
         typeof request.filteredJSON === "number"

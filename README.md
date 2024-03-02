@@ -1,2 +1,3 @@
 # chrome-extention-json-viewer-jq
-JSON  viewer + jq filter
+
+JSON viewer + jq filter
