@@ -24,3 +24,8 @@ npm run build:debug
 ```
 
 build/配下を `chrome://extensions/`で読み込み
+
+# Contact
+
+ご意見: https://forms.gle/9FcMRYKUq3sXXR8z8
+もしくは、 GitHub の issue へ。
