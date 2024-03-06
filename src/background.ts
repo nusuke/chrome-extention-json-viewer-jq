@@ -46,5 +46,31 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
     } catch (e) {
       logger.debug(e);
     }
+
+    // 履歴保存
+    const historyKey = "jqHistory";
+    const histories = await getHistory(historyKey);
+
+    try {
+      await chrome.storage.local.set({
+        [historyKey]: Array.from(new Set([...histories, jqQuery])),
+      });
+    } catch (e) {
+      logger.debug(e);
+    }
   }
 });
+
+const getHistory = async (historyKey: string): Promise<string[]> => {
+  try {
+    const historyData = await chrome.storage.local.get(historyKey);
+    if (historyData && Array.isArray(historyData[historyKey])) {
+      return historyData[historyKey] as string[];
+    } else {
+      return [];
+    }
+  } catch (e) {
+    logger.debug(e);
+    return [];
+  }
+};

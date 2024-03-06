@@ -59,9 +59,15 @@ summary {
 
 // FIXME リファクタで場所を移す
 .queryInput {
-  display: flex;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  &SearchBox {
+    display: flex;
+  }
+
   &Input {
-    width: 90%;
+    width: 85%;
     background: white;
     border-radius: 8px;
     padding: 8px 16px;
@@ -70,5 +76,13 @@ summary {
 
   &ShareButton {
     background: rgb(150, 150, 239);
+  }
+  &Suggest {
+    top: -120px;
+    list-style: none;
+    position: absolute;
+    width: 80%;
+    border-radius: 16px 16px 0 0;
+    background-color: brown;
   }
 }
