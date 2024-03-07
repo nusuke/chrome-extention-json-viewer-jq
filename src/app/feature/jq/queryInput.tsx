@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type P = {
   initialJqQuery: string;
@@ -6,8 +6,9 @@ type P = {
 export const QueryInput: React.FC<P> = (props) => {
   const [jqQuery, setJqQuery] = useState<string>(props.initialJqQuery);
   const [jqQueryHistory, setJqQueryHistory] = useState<string[]>([]);
-  const [historyKeyIndex, setHistoryKeyIndex] = useState(0);
+  const [historyKeyIndex, setHistoryKeyIndex] = useState(-1);
   const [suggestMode, setSuggestMode] = useState(false);
+  const queryInputSuggestRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
     chrome.storage.local.get("jqHistory").then((res) => {
@@ -20,9 +21,20 @@ export const QueryInput: React.FC<P> = (props) => {
     setJqQuery(jqQueryHistory[historyKeyIndex]);
   }, [historyKeyIndex]);
 
+  useEffect(() => {
+    suggestMode &&
+      queryInputSuggestRef.current?.scrollIntoView({
+        behavior: "instant",
+        block: "start",
+        inline: "nearest",
+      });
+  }, [jqQuery]);
+
   // Enterや送信ボタンでjq発火
   function onClickHandler() {
     return () => {
+      setSuggestMode(false);
+
       chrome.runtime.sendMessage({
         type: "query",
         text: jqQuery,
@@ -44,6 +56,7 @@ export const QueryInput: React.FC<P> = (props) => {
     >
       <div className="queryInputSearchBox">
         <input
+          id="queryInputForm"
           type="text"
           placeholder="jq query. ex: keys"
           className="queryInputInput"
@@ -58,12 +71,16 @@ export const QueryInput: React.FC<P> = (props) => {
               setHistoryKeyIndex((s) =>
                 s + 1 > jqQueryHistory.length ? 0 : s + 1
               );
+              !suggestMode && setSuggestMode(true);
             }
             if (e.key === "ArrowDown") {
-              setHistoryKeyIndex((s) => (s - 1 < 0 ? 0 : s - 1));
+              setHistoryKeyIndex((s) => (s >= 0 ? s - 1 : 0));
             }
             if (e.ctrlKey && e.key === "r") {
               setSuggestMode((s) => !s);
+            }
+            if (e.key === "Escape") {
+              setSuggestMode(false);
             }
           }}
           value={jqQuery}
@@ -75,8 +92,17 @@ export const QueryInput: React.FC<P> = (props) => {
 
       {suggestMode && jqQueryHistory.length > 0 && (
         <ul className="queryInputSuggest">
-          {jqQueryHistory.map((queryHistory) => (
-            <li onClick={() => setJqQuery(queryHistory)}>{queryHistory}</li>
+          {jqQueryHistory.reverse().map((queryHistory) => (
+            <li
+              key={queryHistory}
+              onClick={() => setJqQuery(queryHistory)}
+              className={
+                queryHistory === jqQuery ? "queryInputSuggest--active" : ""
+              }
+              ref={queryHistory === jqQuery ? queryInputSuggestRef : null}
+            >
+              {queryHistory}
+            </li>
           ))}
         </ul>
       )}
