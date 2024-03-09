@@ -1,5 +1,6 @@
 import jq from "jq-web/jq.wasm.js";
 import { logger } from "./lib/logger";
+import { getHistory, addHistory } from "./lib/queryHistoryFromLocalStrage";
 
 type MessageType = {
   type: "road" | "query";
@@ -50,29 +51,7 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
     // 履歴保存
     if (!jqQuery) return;
 
-    const historyKey = "jqHistory";
-    const histories = await getHistory(historyKey);
-
-    try {
-      await chrome.storage.local.set({
-        [historyKey]: Array.from(new Set([...histories, jqQuery])),
-      });
-    } catch (e) {
-      logger.debug(e);
-    }
+    const histories = await getHistory();
+    addHistory(jqQuery, histories);
   }
 });
-
-const getHistory = async (historyKey: string): Promise<string[]> => {
-  try {
-    const historyData = await chrome.storage.local.get(historyKey);
-    if (historyData && Array.isArray(historyData[historyKey])) {
-      return historyData[historyKey] as string[];
-    } else {
-      return [];
-    }
-  } catch (e) {
-    logger.debug(e);
-    return [];
-  }
-};

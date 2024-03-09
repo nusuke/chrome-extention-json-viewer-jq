@@ -1,21 +1,22 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  getHistory,
+  removeHistory,
+} from "../../../lib/queryHistoryFromLocalStrage";
 
 type P = {
   initialJqQuery: string;
 };
 export const QueryInput: React.FC<P> = (props) => {
   const [jqQuery, setJqQuery] = useState<string>(props.initialJqQuery);
-  const [jqQueryHistory, setJqQueryHistory] = useState<string[]>([]);
+  const [jqQueryHistories, setJqQueryHistory] = useState<string[]>([]);
   const [historyKeyIndex, setHistoryKeyIndex] = useState(-1);
   const [suggestMode, setSuggestMode] = useState(false);
   const queryInputSuggestRef = useRef<HTMLButtonElement>(null);
 
-  const updateHistoryFromLocalStrage = () => {
-    chrome.storage.local.get("jqHistory").then((res) => {
-      if (res["jqHistory"]) {
-        setJqQueryHistory(res["jqHistory"]);
-      }
-    });
+  const updateHistoryFromLocalStrage = async () => {
+    const res = await getHistory();
+    setJqQueryHistory(res ?? []);
   };
 
   useEffect(() => {
@@ -33,8 +34,8 @@ export const QueryInput: React.FC<P> = (props) => {
 
   // ↑↓で履歴をinput要素にセットする
   useEffect(() => {
-    if (historyKeyIndex >= 0 && jqQueryHistory.length > historyKeyIndex) {
-      setJqQuery(jqQueryHistory[historyKeyIndex]);
+    if (historyKeyIndex >= 0 && jqQueryHistories.length > historyKeyIndex) {
+      setJqQuery(jqQueryHistories[historyKeyIndex]);
     }
   }, [historyKeyIndex]);
 
@@ -61,55 +62,52 @@ export const QueryInput: React.FC<P> = (props) => {
       }}
     >
       <div className="queryInputSearchBox">
-        <input
-          id="queryInputForm"
-          type="text"
-          placeholder="jq query. ex: keys"
-          className="queryInputInput"
-          autoComplete="off"
-          onChange={(e) => {
-            setJqQuery(e.currentTarget.value);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
+        <div className="queryInputSearchBoxInputWrapper">
+          <input
+            id="queryInputForm"
+            type="text"
+            placeholder="jq query. ex: keys"
+            className="queryInputInput"
+            autoComplete="off"
+            onChange={(e) => {
+              setJqQuery(e.currentTarget.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setSuggestMode(false);
+                onClickHandler();
+                e.preventDefault();
+                e.stopPropagation();
+              }
+              if (e.key === "ArrowUp") {
+                setHistoryKeyIndex((s) => (s >= 0 ? s - 1 : 0));
+                !suggestMode && setSuggestMode(true);
+              }
+              if (e.key === "ArrowDown") {
+                setHistoryKeyIndex((s) =>
+                  s + 1 >= jqQueryHistories.length ? s : s + 1
+                );
+                !suggestMode && setSuggestMode(true);
+              }
+              if (e.ctrlKey && e.key === "r") {
+                setSuggestMode((s) => !s);
+              }
+              if (e.key === "Escape") {
+                setSuggestMode(false);
+              }
+            }}
+            onBlur={() => {
               setSuggestMode(false);
-              onClickHandler();
-              e.preventDefault();
-              e.stopPropagation();
-            }
-            if (e.key === "ArrowUp") {
-              setHistoryKeyIndex((s) => (s >= 0 ? s - 1 : 0));
-              !suggestMode && setSuggestMode(true);
-            }
-            if (e.key === "ArrowDown") {
-              setHistoryKeyIndex((s) =>
-                s + 1 >= jqQueryHistory.length ? s : s + 1
-              );
-              !suggestMode && setSuggestMode(true);
-            }
-            if (e.ctrlKey && e.key === "r") {
-              setSuggestMode((s) => !s);
-            }
-            if (e.key === "Escape") {
-              setSuggestMode(false);
-            }
-          }}
-          value={jqQuery}
-        />
-        <button
-          className="queryInputHistoryButton"
-          onClick={() => setSuggestMode((s) => !s)}
-        >
-          history
-        </button>
-        <button
-          className="queryInputHistoryButton"
-          onClick={() => {
-            chrome.storage.local.clear();
-          }}
-        >
-          reset history
-        </button>
+            }}
+            value={jqQuery}
+          />
+          <button
+            className="queryInputHistoryButton"
+            onClick={() => setSuggestMode((s) => !s)}
+          >
+            {suggestMode ? "×" : "history"}
+          </button>
+        </div>
         <button
           className="queryInputShareButton"
           onClick={() => onClickHandler()}
@@ -118,10 +116,10 @@ export const QueryInput: React.FC<P> = (props) => {
         </button>
       </div>
 
-      {suggestMode && jqQueryHistory.length > 0 && (
+      {suggestMode && jqQueryHistories.length > 0 && (
         <ul className="queryInputSuggest">
-          {jqQueryHistory.map((queryHistory) => (
-            <li key={queryHistory}>
+          {jqQueryHistories.map((queryHistory) => (
+            <li key={queryHistory} className="queryInputSuggestList">
               <button
                 className={`${
                   queryHistory === jqQuery ? "queryInputSuggest--active" : ""
@@ -130,6 +128,17 @@ export const QueryInput: React.FC<P> = (props) => {
                 ref={queryHistory === jqQuery ? queryInputSuggestRef : null}
               >
                 {queryHistory}
+              </button>
+              <button
+                className="queryInputSuggestRemoveButton"
+                onClick={() => {
+                  if (confirm(`Can I delete the query "${queryHistory}"?`)) {
+                    removeHistory(queryHistory, jqQueryHistories);
+                    window.location.reload();
+                  }
+                }}
+              >
+                ×
               </button>
             </li>
           ))}
