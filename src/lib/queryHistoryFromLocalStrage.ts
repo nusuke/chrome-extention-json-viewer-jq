@@ -44,3 +44,7 @@ export const removeHistory = async (jqQuery: string, histories: string[]) => {
     logger.debug(e);
   }
 };
+
+export const remoevHistoryAll = () => {
+  chrome.storage.local.clear();
+};

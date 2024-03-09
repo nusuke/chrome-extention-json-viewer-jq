@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   getHistory,
+  remoevHistoryAll,
   removeHistory,
 } from "../../../lib/queryHistoryFromLocalStrage";
 
@@ -40,7 +41,7 @@ export const QueryInput: React.FC<P> = (props) => {
   }, [historyKeyIndex]);
 
   // Enterや送信ボタンでjq発火
-  const onClickHandler = async () => {
+  const executeJq = async (jqQuery: string) => {
     await chrome.runtime.sendMessage({
       type: "query",
       text: jqQuery,
@@ -49,6 +50,7 @@ export const QueryInput: React.FC<P> = (props) => {
     if (jqQuery) {
       updateHistoryFromLocalStrage();
     }
+    setJqQuery(jqQuery);
     const url = new URL(document.URL);
     url.searchParams.set("chromeExtentionJqQuery", jqQuery);
     history.pushState(null, "", url.toString());
@@ -75,7 +77,7 @@ export const QueryInput: React.FC<P> = (props) => {
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setSuggestMode(false);
-                onClickHandler();
+                executeJq(jqQuery);
                 e.preventDefault();
                 e.stopPropagation();
               }
@@ -110,7 +112,7 @@ export const QueryInput: React.FC<P> = (props) => {
         </div>
         <button
           className="queryInputShareButton"
-          onClick={() => onClickHandler()}
+          onClick={() => executeJq(jqQuery)}
         >
           Set URL
         </button>
@@ -124,7 +126,9 @@ export const QueryInput: React.FC<P> = (props) => {
                 className={`${
                   queryHistory === jqQuery ? "queryInputSuggest--active" : ""
                 } queryInputSuggestButton`}
-                onClick={() => setJqQuery(queryHistory)}
+                onClick={() => {
+                  executeJq(queryHistory);
+                }}
                 ref={queryHistory === jqQuery ? queryInputSuggestRef : null}
               >
                 {queryHistory}
@@ -142,6 +146,19 @@ export const QueryInput: React.FC<P> = (props) => {
               </button>
             </li>
           ))}
+          <li>
+            <button
+              className="queryInputSuggestAllRemoveButton"
+              onClick={async () => {
+                if (confirm(`Delete all`)) {
+                  await remoevHistoryAll();
+                  window.location.reload();
+                }
+              }}
+            >
+              all remove.
+            </button>
+          </li>
         </ul>
       )}
     </form>
