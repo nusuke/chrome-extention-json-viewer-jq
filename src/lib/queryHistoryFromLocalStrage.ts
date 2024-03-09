@@ -1,7 +1,7 @@
 import { logger } from "./logger";
 
 const historyKey = "jqHistory";
-
+const HISTORY_MAX_SIZE = 300;
 export const getHistory = async (): Promise<string[]> => {
   try {
     const historyData = await chrome.storage.local.get(historyKey);
@@ -18,7 +18,7 @@ export const getHistory = async (): Promise<string[]> => {
 
 export const addHistory = async (jqQuery: string, histories: string[]) => {
   // 空白やデフォルトは履歴に保持しない
-  if (!jqQuery || jqQuery === ".") {
+  if (!jqQuery || jqQuery === "." || histories.length + 1 >= HISTORY_MAX_SIZE) {
     return;
   }
   try {
