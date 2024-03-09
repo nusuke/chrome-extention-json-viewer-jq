@@ -128,8 +128,6 @@ body {
 
 // FIXME リファクタで場所を移す
 .queryInput {
-  position: fixed;
-  bottom: 0;
   width: 100%;
   height: 64px;
   &SearchBox {
@@ -147,18 +145,21 @@ body {
   &ShareButton {
     background: rgb(150, 150, 239);
   }
+  &HistoryButton {
+    background: rgb(150, 150, 239);
+  }
+
   &Suggest {
-    position: absolute;
+    z-index: 100;
+    position: relative;
     overflow-y: scroll;
     margin: 0;
-    padding: 16px 16px 0px;
-    bottom: 64px;
-    height: 20vh;
-    list-style: none;
-    width: 85%;
-    border-radius: 16px 16px 0 0;
-    background-color: rgba(144, 238, 144, 0.5);
     padding: 4px 16px 4px;
+    max-height: 20vh;
+    width: 85%;
+    border-radius: 0 0 16px 16px;
+    background-color: white;
+    list-style: none;
 
     &Button {
       background-color: none;
@@ -166,7 +167,6 @@ body {
     }
     &--active {
       background-color: rgba(144, 238, 144, 0.9);
-      padding: 4px 16px 4px;
     }
   }
 }
