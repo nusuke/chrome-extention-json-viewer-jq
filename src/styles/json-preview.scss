@@ -53,10 +53,6 @@ body {
   flex-direction: column;
 }
 
-.jsonObjectWrapper {
-  padding-left: 8px;
-}
-
 .jsonKey {
   color: lightsteelblue;
 
@@ -87,6 +83,7 @@ body {
     &::before,
     &::after {
       content: '"';
+      color: rgb(70, 70, 70);
     }
   }
 }
@@ -95,23 +92,23 @@ body {
   display: flex;
 }
 
+.jsonObject {
+  &Detail {
+    padding-left: 8px;
+  }
+
+  &Summary {
+    color: rgb(70, 70, 70);
+    // font-size: small;
+  }
+}
+
 .jsonMiddle {
   &Key {
     @extend .jsonKey;
   }
   &Value {
     padding-left: 8px;
-
-    // :not(detail[open]) {
-    //   display: flex;
-    // }
-
-    // .jsonObjectWrapper {
-    //   .jsonObject {
-    //     // position: relative;
-    //     // left: -80px;
-    //   }
-    // }
   }
 
   &Wrapper {
@@ -124,13 +121,9 @@ body {
       left: 2px;
       height: calc(100% - 30px);
       width: 1px;
-      border-left: dotted 1px gray;
+      border-left: dotted 0.5px rgb(70, 70, 70);
     }
   }
-}
-summary {
-  color: gray;
-  // padding-left: 8px;
 }
 
 // FIXME リファクタで場所を移す
