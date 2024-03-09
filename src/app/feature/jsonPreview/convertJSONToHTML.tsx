@@ -10,17 +10,22 @@ export function convertJSONToHTML(json: JSON) {
   const nodes = [];
 
   for (const [key, value] of Object.entries(json)) {
-    nodes.push(<span className="jsonKey">{key}</span>);
     if (typeof value === "object") {
       const surruondChar = getSurroundCharactor(value);
       nodes.push(
-        <span className="jsonMiddleKey">
-          {surroundParentheses(convertJSONToHTML(value), surruondChar)}
-        </span>
+        <div className="jsonRow">
+          <span className="jsonMiddleKey">{key}</span>
+          <div className="jsonMiddleValue">
+            {surroundParentheses(convertJSONToHTML(value), surruondChar)}
+          </div>
+        </div>
       );
     } else {
       nodes.push(
-        <span className="jsonValue">{convertJsonValueToHTML(value)}</span>
+        <div className="jsonRow">
+          <span className="jsonKey">{key}</span>
+          <span className="jsonValue">{convertJsonValueToHTML(value)}</span>
+        </div>
       );
     }
   }

@@ -25,13 +25,19 @@ export function surroundParentheses(
   surroundChars: SurroundChars
 ) {
   return (
-    <span>
-      <span className="surroundChar--start">{surroundChars.start}</span>
-      <details open={true}>
-        <summary></summary>
-        <span className="jsonObject">{text}</span>
-      </details>
-      <span className="surroundChar--end">{surroundChars.end}</span>
-    </span>
+    <>
+      <div className="jsonMiddleWrapper">
+        <span className="surroundChar--start">{surroundChars.start}</span>
+        <details open={true} className="jsonObjectWrapper">
+          <summary>
+            <span className="surroundChar--start">{surroundChars.start}</span>
+            {text.length}
+            {surroundChars.end}
+          </summary>
+          <span className="jsonObject">{text}</span>
+        </details>
+      </div>
+      <span>{surroundChars.end}</span>
+    </>
   );
 }
