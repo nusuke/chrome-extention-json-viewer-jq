@@ -45,8 +45,6 @@ export const QueryInput: React.FC<P> = (props) => {
 
   // Enterや送信ボタンでjq発火
   const onClickHandler = () => {
-    setSuggestMode(false);
-
     chrome.runtime.sendMessage({
       type: "query",
       text: jqQuery,
@@ -79,6 +77,7 @@ export const QueryInput: React.FC<P> = (props) => {
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
+              setSuggestMode(false);
               onClickHandler();
             }
             if (e.key === "ArrowUp") {

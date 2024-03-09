@@ -30,7 +30,7 @@ export function surroundParentheses(
         <span className="surroundChar--start">{surroundChars.start}</span>
         <details open={true} className="jsonObjectWrapper">
           <summary>
-            <span className="surroundChar--start">{surroundChars.start}</span>
+            {surroundChars.start}
             {text.length}
             {surroundChars.end}
           </summary>

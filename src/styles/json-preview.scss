@@ -53,13 +53,8 @@ body {
   flex-direction: column;
 }
 
-.jsonObject {
-  // display: inline-block;
-  // padding-left: 16px;
-}
 .jsonObjectWrapper {
-  // display: flex;
-  padding-left: 16px;
+  padding-left: 8px;
 }
 
 .jsonKey {
@@ -100,27 +95,42 @@ body {
   display: flex;
 }
 
-.jsonMiddleKey {
-  @extend .jsonKey;
-}
-.jsonMiddleValue {
-  padding-left: 16px;
-}
-.jsonMiddleWrapper {
-  display: flex;
-}
+.jsonMiddle {
+  &Key {
+    @extend .jsonKey;
+  }
+  &Value {
+    padding-left: 8px;
 
+    // :not(detail[open]) {
+    //   display: flex;
+    // }
+
+    // .jsonObjectWrapper {
+    //   .jsonObject {
+    //     // position: relative;
+    //     // left: -80px;
+    //   }
+    // }
+  }
+
+  &Wrapper {
+    display: flex;
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 30px; /* 上端のオフセット */
+      left: 2px;
+      height: calc(100% - 30px);
+      width: 1px;
+      border-left: dotted 1px gray;
+    }
+  }
+}
 summary {
   color: gray;
-  padding-left: 8px;
-}
-
-.surroundChar--start {
-  // border-left: solid 0.5px white;
-  // border-style: dotted;
-  &::after {
-    display: block;
-  }
+  // padding-left: 8px;
 }
 
 // FIXME リファクタで場所を移す
