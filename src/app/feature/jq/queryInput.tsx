@@ -8,17 +8,30 @@ export const QueryInput: React.FC<P> = (props) => {
   const [jqQueryHistory, setJqQueryHistory] = useState<string[]>([]);
   const [historyKeyIndex, setHistoryKeyIndex] = useState(-1);
   const [suggestMode, setSuggestMode] = useState(false);
-  const queryInputSuggestRef = useRef<HTMLLIElement>(null);
+  const queryInputSuggestRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    chrome.runtime.sendMessage({
+      type: "query",
+      text: props.initialJqQuery,
+    });
+
     chrome.storage.local.get("jqHistory").then((res) => {
-      setJqQueryHistory(res["jqHistory"]);
+      if (res["jqHistory"]) {
+        setJqQueryHistory(res["jqHistory"]);
+      }
     });
   }, []);
 
+  useEffect(() => {
+    setSuggestMode(false);
+  }, [props.initialJqQuery]);
+
   // ↑↓で履歴をinput要素にセットする
   useEffect(() => {
-    setJqQuery(jqQueryHistory[historyKeyIndex]);
+    if (historyKeyIndex >= 0) {
+      setJqQuery(jqQueryHistory[historyKeyIndex]);
+    }
   }, [historyKeyIndex]);
 
   useEffect(() => {
@@ -31,21 +44,21 @@ export const QueryInput: React.FC<P> = (props) => {
   }, [jqQuery]);
 
   // Enterや送信ボタンでjq発火
-  function onClickHandler() {
-    return () => {
-      setSuggestMode(false);
+  const onClickHandler = () => {
+    setSuggestMode(false);
 
-      chrome.runtime.sendMessage({
-        type: "query",
-        text: jqQuery,
-      });
+    chrome.runtime.sendMessage({
+      type: "query",
+      text: jqQuery,
+    });
+
+    if (jqQuery) {
       setJqQueryHistory(Array.from(new Set([...jqQueryHistory, jqQuery])));
-
-      const url = new URL(document.URL);
-      url.searchParams.set("chromeExtentionJqQuery", jqQuery);
-      history.pushState(null, "", url.toString());
-    };
-  }
+    }
+    const url = new URL(document.URL);
+    url.searchParams.set("chromeExtentionJqQuery", jqQuery);
+    history.pushState(null, "", url.toString());
+  };
 
   return (
     <form
@@ -60,6 +73,7 @@ export const QueryInput: React.FC<P> = (props) => {
           type="text"
           placeholder="jq query. ex: keys"
           className="queryInputInput"
+          autoComplete="off"
           onChange={(e) => {
             setJqQuery(e.currentTarget.value);
           }}
@@ -85,7 +99,26 @@ export const QueryInput: React.FC<P> = (props) => {
           }}
           value={jqQuery}
         />
-        <button className="queryInputShareButton" onClick={onClickHandler()}>
+        <button
+          className="queryInputHistoryButton"
+          onClick={() => {
+            setSuggestMode((s) => !s);
+          }}
+        >
+          history
+        </button>
+        <button
+          className="queryInputHistoryButton"
+          onClick={() => {
+            chrome.storage.local.clear();
+          }}
+        >
+          reset history
+        </button>
+        <button
+          className="queryInputShareButton"
+          onClick={() => onClickHandler()}
+        >
           Set URL
         </button>
       </div>
@@ -93,15 +126,16 @@ export const QueryInput: React.FC<P> = (props) => {
       {suggestMode && jqQueryHistory.length > 0 && (
         <ul className="queryInputSuggest">
           {jqQueryHistory.reverse().map((queryHistory) => (
-            <li
-              key={queryHistory}
-              onClick={() => setJqQuery(queryHistory)}
-              className={
-                queryHistory === jqQuery ? "queryInputSuggest--active" : ""
-              }
-              ref={queryHistory === jqQuery ? queryInputSuggestRef : null}
-            >
-              {queryHistory}
+            <li key={queryHistory}>
+              <button
+                className={`${
+                  queryHistory === jqQuery ? "queryInputSuggest--active" : ""
+                } queryInputSuggestButton`}
+                onClick={() => setJqQuery(queryHistory)}
+                ref={queryHistory === jqQuery ? queryInputSuggestRef : null}
+              >
+                {queryHistory}
+              </button>
             </li>
           ))}
         </ul>

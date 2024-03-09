@@ -48,6 +48,8 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
     }
 
     // 履歴保存
+    if (!jqQuery) return;
+
     const historyKey = "jqHistory";
     const histories = await getHistory(historyKey);
 
