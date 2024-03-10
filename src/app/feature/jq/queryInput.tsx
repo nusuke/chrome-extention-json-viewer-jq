@@ -42,6 +42,7 @@ export const QueryInput: React.FC<P> = (props) => {
 
   // Enterや送信ボタンでjq発火
   const executeJq = async (jqQuery: string) => {
+    setSuggestMode(false);
     await chrome.runtime.sendMessage({
       type: "query",
       text: jqQuery,
