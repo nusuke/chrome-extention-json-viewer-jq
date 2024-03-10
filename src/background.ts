@@ -1,5 +1,6 @@
 import jq from "jq-web/jq.wasm.js";
 import { logger } from "./lib/logger";
+import { getHistory, addHistory } from "./lib/queryHistoryFromLocalStrage";
 
 type MessageType = {
   type: "road" | "query";
@@ -46,5 +47,11 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
     } catch (e) {
       logger.debug(e);
     }
+
+    // 履歴保存
+    if (!jqQuery) return;
+
+    const histories = await getHistory();
+    addHistory(jqQuery, histories);
   }
 });
