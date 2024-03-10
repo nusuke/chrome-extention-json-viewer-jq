@@ -131,7 +131,9 @@ button:focus {
 
   &ShareButton {
     background: rgb(150, 150, 239);
+    border-radius: 4px;
     color: white;
+    margin-left: 8px;
     padding: 8px 16px;
   }
   &HistoryButton {
