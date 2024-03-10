@@ -20,6 +20,10 @@ body {
   flex-direction: column;
 }
 
+button:focus {
+  border: solid 1px white;
+}
+
 .jsonKey {
   color: lightsteelblue;
 
@@ -153,6 +157,7 @@ body {
       display: flex;
       justify-content: flex-start;
       color: white;
+      font-size: large;
     }
     &--active {
       background-color: rgba(144, 238, 144, 0.9);
