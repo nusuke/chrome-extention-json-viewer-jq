@@ -38,6 +38,7 @@ module.exports = {
         { from: "manifest.json", to: "" },
         { from: "assets", to: "" },
         { from: "node_modules/jq-web/jq.wasm.wasm", to: "" },
+        { from: "LICENSE", to: "" },
       ],
     }),
   ],
