@@ -1,6 +1,7 @@
 import jq from "jq-web/jq.wasm.js";
 import { logger } from "./lib/logger";
 import { getHistory, addHistory } from "./lib/queryHistoryFromLocalStrage";
+import rustJqModulePromise from "rust-jq";
 
 type MessageType = {
   type: "road" | "query";
@@ -13,6 +14,20 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
   if (!sender.tab?.id) return;
   if (message.type == "road") {
     const text = message.text;
+
+    rustJqModulePromise
+      //@ts-ignore
+      .then((rustJqModule) => {
+        // wasmモジュールが解決された後の処理
+        console.log(rustJqModule);
+        console.log(rustJqModule.greet("a"));
+      })
+      //@ts-ignore
+      .catch((error) => {
+        // モジュールの読み込みが失敗した場合の処理
+        console.error(error);
+      });
+
     try {
       const json = JSON.parse(text);
 
