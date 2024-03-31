@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`jsonPreview snapshot json preview 1`] = `
-[
+<div
+  className="jsonPreview"
+>
   <div
     className="jsonMiddleWrapper"
   >
@@ -1073,9 +1075,9 @@ exports[`jsonPreview snapshot json preview 1`] = `
         </div>
       </span>
     </details>
-  </div>,
+  </div>
   <span>
     }
-  </span>,
-]
+  </span>
+</div>
 `;
