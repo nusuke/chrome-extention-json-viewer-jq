@@ -8,11 +8,11 @@ export const getHistory = async (): Promise<string[]> => {
     if (historyData && Array.isArray(historyData[historyKey])) {
       return historyData[historyKey] as string[];
     } else {
-      return [];
+      return ["."];
     }
   } catch (e) {
     logger.debug(e);
-    return [];
+    return ["."];
   }
 };
 

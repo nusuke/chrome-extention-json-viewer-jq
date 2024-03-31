@@ -41,17 +41,18 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
         lastFocusedWindow: true,
       });
       if (!tab.id) return;
+
+      // 履歴保存
+      if (jqQuery) {
+        const histories = await getHistory();
+        await addHistory(jqQuery, histories);
+      }
+
       chrome.tabs.sendMessage(tab.id, {
         filteredJSON: res,
       });
     } catch (e) {
       logger.debug(e);
     }
-
-    // 履歴保存
-    if (!jqQuery) return;
-
-    const histories = await getHistory();
-    addHistory(jqQuery, histories);
   }
 });

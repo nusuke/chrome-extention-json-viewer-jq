@@ -16,6 +16,7 @@ select {
 // ##################### 変数 ###################
 
 $app-gray: rgb(70, 70, 70);
+$json-font-size: 0.85rem;
 
 // ##################### 変数 ↑ ###################
 body {
@@ -29,74 +30,79 @@ button:focus {
   border: solid 1px white;
 }
 
-.jsonKey {
-  color: lightsteelblue;
+.jsonPreview {
+  padding-top: 24px;
+  .jsonKey {
+    color: lightsteelblue;
 
-  &::after {
-    content: " : ";
-    color: white;
-  }
-}
-
-.jsonValue {
-  margin-left: 8px;
-  &::after {
-    content: ",\A";
-    white-space: pre;
-  }
-
-  &--number {
-    color: antiquewhite;
-  }
-  &--string {
-    color: lightgreen;
-    &::before,
     &::after {
-      content: '"';
+      content: " : ";
+      color: white;
     }
   }
-  &--url {
-    &::before,
+
+  .jsonValue {
+    margin-left: 8px;
     &::after {
-      content: '"';
-      color: $app-gray;
+      content: ",\A";
+      white-space: pre;
+    }
+
+    &--number {
+      color: antiquewhite;
+    }
+    &--string {
+      color: lightgreen;
+      &::before,
+      &::after {
+        content: '"';
+      }
+    }
+    &--url {
+      &::before,
+      &::after {
+        content: '"';
+        color: $app-gray;
+      }
     }
   }
-}
 
-.jsonRow {
-  display: flex;
-}
-
-.jsonObject {
-  &Detail {
-    padding-left: 8px;
-  }
-
-  &Summary {
-    color: $app-gray;
-  }
-}
-
-.jsonMiddle {
-  &Key {
-    @extend .jsonKey;
-  }
-  &Value {
-    padding-left: 8px;
-  }
-
-  &Wrapper {
+  .jsonRow {
     display: flex;
-    position: relative;
-    &::before {
-      content: "";
-      position: absolute;
-      top: 30px; /* 上端のオフセット */
-      left: 2px;
-      height: calc(100% - 30px);
-      width: 1px;
-      border-left: dotted 0.5px $app-gray;
+  }
+
+  .jsonObject {
+    &Detail {
+      padding-left: 8px;
+    }
+
+    &Summary {
+      color: $app-gray;
+      width: 40px;
+    }
+  }
+
+  .jsonMiddle {
+    &Key {
+      @extend .jsonKey;
+    }
+    &Value {
+      padding-left: 8px;
+    }
+
+    &Wrapper {
+      display: flex;
+      position: relative;
+      font-size: $json-font-size;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 30px; /* 上端のオフセット */
+        left: 2px;
+        height: calc(100% - 30px);
+        width: 1px;
+        border-left: dotted 0.5px $app-gray;
+      }
     }
   }
 }
@@ -105,21 +111,23 @@ button:focus {
 .queryInput {
   width: 100%;
   max-width: 800px;
-  min-height: 64px;
   display: flex;
+  position: fixed;
+  top: 4px;
+  z-index: 900;
   flex-direction: column;
   align-items: center;
   justify-content: start;
   &SearchBox {
     display: flex;
-    justify-content: space-around;
+    justify-content: start;
     width: 100%;
 
     &InputWrapper {
       width: 85%;
       background: white;
       border-radius: 8px;
-      padding: 8px 16px;
+      // padding: 8px 8px;
       color: black;
       position: relative;
     }
@@ -127,6 +135,8 @@ button:focus {
 
   &Input {
     width: 100%;
+    min-height: 24px;
+    padding-left: 8px;
   }
 
   &ShareButton {
@@ -134,7 +144,7 @@ button:focus {
     border-radius: 4px;
     color: white;
     margin-left: 8px;
-    padding: 8px 16px;
+    padding: 4px 8px;
   }
   &HistoryButton {
     position: absolute;
@@ -143,7 +153,7 @@ button:focus {
     transform: translateY(-50%);
     background-color: rgba($app-gray, 0.7);
     color: white;
-    height: 80%;
+    // height: 80%;
     padding: 4px 8px;
     border-radius: 4px;
   }
@@ -154,9 +164,9 @@ button:focus {
     margin: 0 16px 0px;
     padding: 8px 16px 8px;
     max-height: 20vh;
-    width: 60%;
+    width: 75%;
     border-radius: 0 0 8px 8px;
-    background-color: rgba(244, 241, 241, 0.5);
+    background-color: rgba(42, 41, 41, 0.8);
     list-style: none;
 
     &Button {

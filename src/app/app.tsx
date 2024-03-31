@@ -14,11 +14,7 @@ export const App: React.FC<P> = (props) => {
         typeof request.filteredJSON === "string" ||
         typeof request.filteredJSON === "number"
       ) {
-        setTargetJson(
-          JSON.parse(
-            JSON.stringify({ "jq result value =>": request.filteredJSON })
-          )
-        );
+        setTargetJson(JSON.parse(JSON.stringify({ "": request.filteredJSON })));
       } else {
         try {
           const json = JSON.parse(JSON.stringify(request.filteredJSON));

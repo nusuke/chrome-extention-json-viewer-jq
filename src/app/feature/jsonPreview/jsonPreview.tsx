@@ -13,8 +13,8 @@ export const JsonPreview: React.FC<P> = (props: P) => {
   const surruondChar = getSurroundCharactor(props.targetJson);
 
   return (
-    <>
+    <div className="jsonPreview">
       {surroundParentheses(convertJSONToHTML(props.targetJson), surruondChar)}
-    </>
+    </div>
   );
 };
