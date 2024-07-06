@@ -40,8 +40,8 @@ export const useQueryHistory = (setJqQuery: any) => {
     }
   };
 
-  const execQueryHistory = () => {
-    setJqQuery(selectedHistoryQuery);
+  const execQueryHistory = (query?: string) => {
+    setJqQuery(query ?? selectedHistoryQuery);
   };
 
   return {

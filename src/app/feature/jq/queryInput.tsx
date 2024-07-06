@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryHistory } from "./historyHooks";
 import DeleteIcon from "../../../icons/delete.svg";
 import HistoryIcon from "../../../icons/history.svg";
@@ -49,14 +49,24 @@ export const QueryInput: React.FC<P> = (props) => {
       updateHistoryFromLocalStrage();
     }
     setJqQuery(jqQuery);
-    const url = new URL(document.URL);
-    url.searchParams.set("chromeExtentionJqQuery", jqQuery);
-    history.pushState(null, "", url.toString());
   };
 
   // 入力されるたびに実行
   useEffect(() => {
     executeJq(jqQuery);
+  }, [jqQuery]);
+
+  const shareHandler = useCallback(() => {
+    executeJq(jqQuery);
+
+    const url = new URL(document.URL);
+    url.searchParams.set("chromeExtentionJqQuery", jqQuery);
+    history.pushState(null, "", url.toString());
+
+    chrome.runtime.sendMessage({
+      type: messageType.setHistory,
+      text: jqQuery,
+    });
   }, [jqQuery]);
 
   return (
@@ -118,17 +128,7 @@ export const QueryInput: React.FC<P> = (props) => {
           </button>
         </div>
         <div className="queryInputButtonArea">
-          <button
-            className="queryInputShareButton"
-            onClick={() => {
-              executeJq(jqQuery);
-
-              chrome.runtime.sendMessage({
-                type: messageType.setHistory,
-                text: jqQuery,
-              });
-            }}
-          >
+          <button className="queryInputShareButton" onClick={shareHandler}>
             Set URL
           </button>
           <button
@@ -151,7 +151,7 @@ export const QueryInput: React.FC<P> = (props) => {
                     ? "queryInputSuggest--active"
                     : ""
                 } queryInputSuggestButton`}
-                onClick={execQueryHistory}
+                onClick={() => execQueryHistory(queryHistory)}
                 ref={
                   queryHistory === selectedHistoryQuery
                     ? queryInputSuggestRef
