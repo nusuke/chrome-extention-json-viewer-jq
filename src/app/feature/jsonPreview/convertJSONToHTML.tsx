@@ -9,7 +9,28 @@ import { getSurroundCharactor, surroundParentheses } from "./parentheses";
 export function convertJSONToHTML(json: JSON) {
   const nodes = [];
 
-  for (const [key, value] of Object.entries(json)) {
+  // booleanなどが単一で入ってきた際
+  const jsonArray = Object.entries(json);
+  if (jsonArray.length === 0) {
+    nodes.push(
+      <div className="jsonRow">
+        <span className="jsonValue">{convertJsonValueToHTML(json)}</span>
+      </div>
+    );
+
+    return nodes;
+  }
+  for (const [key, value] of jsonArray) {
+    // keyがfalsyの場合
+    if (!key) {
+      nodes.push(
+        <div className="jsonRow">
+          <span className="jsonValue">{convertJsonValueToHTML(value)}</span>
+        </div>
+      );
+      return nodes;
+    }
+
     if (typeof value === "object") {
       const surruondChar = getSurroundCharactor(value);
       nodes.push(
@@ -40,6 +61,12 @@ export function convertJSONToHTML(json: JSON) {
 function convertJsonValueToHTML(value: unknown) {
   if (typeof value === "number") {
     return <span className="jsonValue--number">{value}</span>;
+  } else if (typeof value === "boolean") {
+    return (
+      <span className="jsonValue--boolean">{value ? "true" : "false"}</span>
+    );
+  } else if (typeof value === "undefined") {
+    return <span className="jsonValue--undefined">{value}</span>;
   } else if (typeof value === "string") {
     if (URL.canParse(value)) {
       return (

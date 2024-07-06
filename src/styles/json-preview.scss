@@ -1,43 +1,26 @@
-// ##################### reset css ###################
-input,
-button,
-textarea,
-select {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  appearance: none;
-  color: #000;
-}
-// ##################### reset css ↑ ###################
+@import "variables";
+@import "reset";
 
-// ##################### 変数 ###################
-
-$app-gray: rgb(70, 70, 70);
-$json-font-size: 0.85rem;
-
-// ##################### 変数 ↑ ###################
 body {
   padding: 8px;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  background-color: $background-color;
 }
 
 button:focus {
-  border: solid 1px white;
+  border: solid 1px $punctuation-color;
 }
 
 .jsonPreview {
-  padding-top: 24px;
+  padding-top: 8px;
   .jsonKey {
-    color: lightsteelblue;
+    color: $text-color;
 
     &::after {
       content: " : ";
-      color: white;
+      color: $punctuation-color;
     }
   }
 
@@ -48,11 +31,17 @@ button:focus {
       white-space: pre;
     }
 
+    &--boolean {
+      color: $boolean-color;
+    }
+    &--undefined {
+      color: $undefined-color;
+    }
     &--number {
-      color: antiquewhite;
+      color: $number-color;
     }
     &--string {
-      color: lightgreen;
+      color: $string-color;
       &::before,
       &::after {
         content: '"';
@@ -62,7 +51,7 @@ button:focus {
       &::before,
       &::after {
         content: '"';
-        color: $app-gray;
+        color: $punctuation-color;
       }
     }
   }
@@ -77,7 +66,7 @@ button:focus {
     }
 
     &Summary {
-      color: $app-gray;
+      color: $punctuation-color;
       width: 40px;
     }
   }
@@ -101,23 +90,20 @@ button:focus {
         left: 2px;
         height: calc(100% - 30px);
         width: 1px;
-        border-left: dotted 0.5px $app-gray;
+        border-left: dotted 0.5px $punctuation-color;
       }
     }
   }
 }
 
-// FIXME リファクタで場所を移す
 .queryInput {
   width: 100%;
   max-width: 800px;
   display: flex;
-  position: fixed;
-  top: 4px;
-  z-index: 900;
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  position: relative;
   &SearchBox {
     display: flex;
     justify-content: start;
@@ -126,7 +112,7 @@ button:focus {
     &InputWrapper {
       width: 85%;
       background: white;
-      border-radius: 8px;
+      border-radius: 2px;
       color: black;
       position: relative;
     }
@@ -134,58 +120,79 @@ button:focus {
 
   &Input {
     width: 100%;
-    min-height: 24px;
+    height: 100%;
     padding-left: 8px;
   }
 
+  &ButtonArea {
+    display: flex;
+    justify-content: center;
+  }
   &ShareButton {
-    background: rgb(150, 150, 239);
-    border-radius: 4px;
-    color: white;
+    background: $button-active-background;
+    border-radius: 2px;
+    color: $button-active-text;
     margin-left: 8px;
     padding: 4px 8px;
   }
   &HistoryButton {
+    background-color: rgba($app-gray, 0.7);
+    color: $white-color;
+    padding: 4px 8px;
+    border-radius: 2px;
+  }
+
+  &DeleteButton {
     position: absolute;
-    right: 20px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba($app-gray, 0.7);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 
   &Suggest {
-    position: relative;
+    position: absolute;
+    z-index: 10;
+    top: 100%;
     overflow-y: scroll;
     margin: 0 16px 0px;
     padding: 8px 16px 8px;
     max-height: 20vh;
-    width: 75%;
+    width: 100%;
     border-radius: 0 0 8px 8px;
-    background-color: rgba(42, 41, 41, 0.8);
+    background-color: $background-color;
     list-style: none;
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));
 
     &Button {
       min-width: 90%;
       display: flex;
       justify-content: flex-start;
-      color: white;
+      color: $white-color;
       font-size: large;
+      &:hover {
+        background-color: $button-hover-background;
+      }
     }
     &--active {
-      background-color: rgba(144, 238, 144, 0.9);
+      padding: 0 8px;
+      background-color: $button-hover-background;
     }
     &RemoveButton {
-      color: white;
+      color: $white-color;
       width: 64px;
+      &:hover {
+        background-color: $button-hover-background;
+      }
     }
 
     &AllRemoveButton {
-      border-top: solid 1px white;
-      color: white;
+      border-top: solid 1px $white-color;
+      color: $white-color;
       width: 100%;
+      &:hover {
+        background-color: $button-hover-background;
+      }
     }
 
     &List {

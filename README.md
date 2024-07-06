@@ -21,7 +21,7 @@ Chrome Web Store: https://chromewebstore.google.com/detail/json-viewer-+jq/jiepg
 # 開発環境用意
 
 ```
-npm ci --force
+npm ci
 npm run build:debug
 ```
 

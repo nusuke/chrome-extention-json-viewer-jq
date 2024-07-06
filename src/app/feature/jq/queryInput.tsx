@@ -1,28 +1,32 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  getHistory,
-  remoevHistoryAll,
-  removeHistory,
-} from "../../../lib/queryHistoryFromLocalStrage";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useQueryHistory } from "./historyHooks";
+import DeleteIcon from "../../../icons/delete.svg";
+import HistoryIcon from "../../../icons/history.svg";
+import { messageType } from "../../../background";
 
 type P = {
   initialJqQuery: string;
 };
 export const QueryInput: React.FC<P> = (props) => {
   const [jqQuery, setJqQuery] = useState<string>(props.initialJqQuery);
-  const [jqQueryHistories, setJqQueryHistory] = useState<string[]>([]);
-  const [historyKeyIndex, setHistoryKeyIndex] = useState(-1);
-  const [suggestMode, setSuggestMode] = useState(false);
-  const queryInputSuggestRef = useRef<HTMLButtonElement>(null);
 
-  const updateHistoryFromLocalStrage = async () => {
-    const res = await getHistory();
-    setJqQueryHistory(res ?? []);
-  };
+  const {
+    updateHistoryFromLocalStrage,
+    setSuggestMode,
+    setHistoryKeyIndex,
+    suggestMode,
+    jqQueryHistories,
+    allRemoveHisotryHandler,
+    removeHisotryHandler,
+    execQueryHistory,
+    selectedHistoryQuery,
+  } = useQueryHistory(setJqQuery);
+
+  const queryInputSuggestRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     chrome.runtime.sendMessage({
-      type: "query",
+      type: messageType.query,
       text: props.initialJqQuery,
     });
 
@@ -33,18 +37,11 @@ export const QueryInput: React.FC<P> = (props) => {
     setSuggestMode(false);
   }, [props.initialJqQuery]);
 
-  // ↑↓で履歴をinput要素にセットする
-  useEffect(() => {
-    if (historyKeyIndex >= 0 && jqQueryHistories.length > historyKeyIndex) {
-      setJqQuery(jqQueryHistories[historyKeyIndex]);
-    }
-  }, [historyKeyIndex]);
-
-  // Enterや送信ボタンでjq発火
+  // jq発火
   const executeJq = async (jqQuery: string) => {
     setSuggestMode(false);
     await chrome.runtime.sendMessage({
-      type: "query",
+      type: messageType.query,
       text: jqQuery,
     });
 
@@ -52,10 +49,25 @@ export const QueryInput: React.FC<P> = (props) => {
       updateHistoryFromLocalStrage();
     }
     setJqQuery(jqQuery);
+  };
+
+  // 入力されるたびに実行
+  useEffect(() => {
+    executeJq(jqQuery);
+  }, [jqQuery]);
+
+  const shareHandler = useCallback(() => {
+    executeJq(jqQuery);
+
     const url = new URL(document.URL);
     url.searchParams.set("chromeExtentionJqQuery", jqQuery);
     history.pushState(null, "", url.toString());
-  };
+
+    chrome.runtime.sendMessage({
+      type: messageType.setHistory,
+      text: jqQuery,
+    });
+  }, [jqQuery]);
 
   return (
     <form
@@ -77,8 +89,9 @@ export const QueryInput: React.FC<P> = (props) => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
+                suggestMode ? execQueryHistory() : executeJq(jqQuery);
+
                 setSuggestMode(false);
-                executeJq(jqQuery);
                 e.preventDefault();
                 e.stopPropagation();
               }
@@ -105,18 +118,27 @@ export const QueryInput: React.FC<P> = (props) => {
             value={jqQuery}
           />
           <button
-            className="queryInputHistoryButton"
-            onClick={() => setSuggestMode((s) => !s)}
+            className="queryInputDeleteButton"
+            onClick={() => {
+              executeJq(".");
+            }}
+            aria-label="reset input"
           >
-            {suggestMode ? "×" : "history"}
+            <DeleteIcon />
           </button>
         </div>
-        <button
-          className="queryInputShareButton"
-          onClick={() => executeJq(jqQuery)}
-        >
-          Set URL
-        </button>
+        <div className="queryInputButtonArea">
+          <button className="queryInputShareButton" onClick={shareHandler}>
+            Set URL
+          </button>
+          <button
+            className="queryInputHistoryButton"
+            onClick={() => setSuggestMode((s) => !s)}
+            aria-label="history"
+          >
+            {suggestMode ? "×" : <HistoryIcon />}
+          </button>
+        </div>
       </div>
 
       {suggestMode && jqQueryHistories.length > 0 && (
@@ -125,23 +147,22 @@ export const QueryInput: React.FC<P> = (props) => {
             <li key={queryHistory} className="queryInputSuggestList">
               <button
                 className={`${
-                  queryHistory === jqQuery ? "queryInputSuggest--active" : ""
+                  queryHistory === selectedHistoryQuery
+                    ? "queryInputSuggest--active"
+                    : ""
                 } queryInputSuggestButton`}
-                onClick={() => {
-                  executeJq(queryHistory);
-                }}
-                ref={queryHistory === jqQuery ? queryInputSuggestRef : null}
+                onClick={() => execQueryHistory(queryHistory)}
+                ref={
+                  queryHistory === selectedHistoryQuery
+                    ? queryInputSuggestRef
+                    : null
+                }
               >
                 {queryHistory}
               </button>
               <button
                 className="queryInputSuggestRemoveButton"
-                onClick={() => {
-                  if (confirm(`Can I delete the query "${queryHistory}"?`)) {
-                    removeHistory(queryHistory, jqQueryHistories);
-                    window.location.reload();
-                  }
-                }}
+                onClick={() => removeHisotryHandler(queryHistory)}
               >
                 ×
               </button>
@@ -150,12 +171,7 @@ export const QueryInput: React.FC<P> = (props) => {
           <li>
             <button
               className="queryInputSuggestAllRemoveButton"
-              onClick={async () => {
-                if (confirm(`Delete all`)) {
-                  await remoevHistoryAll();
-                  window.location.reload();
-                }
-              }}
+              onClick={allRemoveHisotryHandler}
             >
               all remove.
             </button>
