@@ -18,26 +18,64 @@ select {
 $app-gray: rgb(70, 70, 70);
 $json-font-size: 0.85rem;
 
+// 基本色
+$background-color: rgb(40, 44, 52);
+$text-color: rgb(171, 178, 191);
+$white-color: rgb(220, 223, 228);
+
+// JSON要素の色
+$key-color: rgb(97, 175, 239);
+$string-color: rgb(152, 195, 121);
+$number-color: rgb(209, 154, 102);
+$boolean-color: rgb(198, 120, 221);
+$undefined-color: rgb(224, 108, 117);
+
+// 構造要素の色
+$punctuation-color: rgb(86, 92, 100);
+
+// ハイライト色
+$highlight-color: rgb(58, 64, 74);
+
+$button-background: rgb(
+  86,
+  92,
+  100
+); // 濃いグレー（既存の punctuation-color と同じ）
+$button-text: rgb(
+  220,
+  223,
+  228
+); // 明るいグレー（既存の text-color より少し明るく）
+$button-hover-background: rgb(
+  97,
+  175,
+  239
+); // 明るい青（既存の key-color と同じ）
+$button-hover-text: rgb(255, 255, 255); // 白
+$button-active-background: rgb(78, 140, 191); // hover 状態より少し暗い青
+$button-active-text: rgb(255, 255, 255); // 白
+
 // ##################### 変数 ↑ ###################
 body {
   padding: 8px;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  background-color: $background-color;
 }
 
 button:focus {
-  border: solid 1px white;
+  border: solid 1px $punctuation-color;
 }
 
 .jsonPreview {
   padding-top: 24px;
   .jsonKey {
-    color: lightsteelblue;
+    color: $text-color;
 
     &::after {
       content: " : ";
-      color: white;
+      color: $punctuation-color;
     }
   }
 
@@ -48,11 +86,17 @@ button:focus {
       white-space: pre;
     }
 
+    &--boolean {
+      color: $boolean-color;
+    }
+    &--undefined {
+      color: $undefined-color;
+    }
     &--number {
-      color: antiquewhite;
+      color: $number-color;
     }
     &--string {
-      color: lightgreen;
+      color: $string-color;
       &::before,
       &::after {
         content: '"';
@@ -62,7 +106,7 @@ button:focus {
       &::before,
       &::after {
         content: '"';
-        color: $app-gray;
+        color: $punctuation-color;
       }
     }
   }
@@ -77,7 +121,7 @@ button:focus {
     }
 
     &Summary {
-      color: $app-gray;
+      color: $punctuation-color;
       width: 40px;
     }
   }
@@ -101,7 +145,7 @@ button:focus {
         left: 2px;
         height: calc(100% - 30px);
         width: 1px;
-        border-left: dotted 0.5px $app-gray;
+        border-left: dotted 0.5px $punctuation-color;
       }
     }
   }
@@ -126,7 +170,7 @@ button:focus {
     &InputWrapper {
       width: 85%;
       background: white;
-      border-radius: 8px;
+      border-radius: 2px;
       color: black;
       position: relative;
     }
@@ -139,9 +183,9 @@ button:focus {
   }
 
   &ShareButton {
-    background: rgb(150, 150, 239);
-    border-radius: 4px;
-    color: white;
+    background: $button-active-background;
+    border-radius: 2px;
+    color: $button-active-text;
     margin-left: 8px;
     padding: 4px 8px;
   }
@@ -151,7 +195,7 @@ button:focus {
     top: 50%;
     transform: translateY(-50%);
     background-color: rgba($app-gray, 0.7);
-    color: white;
+    color: $button-active-text;
     padding: 4px 8px;
     border-radius: 4px;
   }
@@ -171,20 +215,21 @@ button:focus {
       min-width: 90%;
       display: flex;
       justify-content: flex-start;
-      color: white;
+      color: $white-color;
       font-size: large;
     }
     &--active {
-      background-color: rgba(144, 238, 144, 0.9);
+      padding: 0 8px;
+      background-color: $highlight-color;
     }
     &RemoveButton {
-      color: white;
+      color: $white-color;
       width: 64px;
     }
 
     &AllRemoveButton {
-      border-top: solid 1px white;
-      color: white;
+      border-top: solid 1px $white-color;
+      color: $white-color;
       width: 100%;
     }
 

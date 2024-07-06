@@ -23,7 +23,7 @@ export function convertJSONToHTML(json: JSON) {
     } else {
       nodes.push(
         <div className="jsonRow">
-          <span className="jsonKey">{key}</span>
+          {key && <span className="jsonKey">{key}</span>}
           <span className="jsonValue">{convertJsonValueToHTML(value)}</span>
         </div>
       );
@@ -40,6 +40,12 @@ export function convertJSONToHTML(json: JSON) {
 function convertJsonValueToHTML(value: unknown) {
   if (typeof value === "number") {
     return <span className="jsonValue--number">{value}</span>;
+  } else if (typeof value === "boolean") {
+    return (
+      <span className="jsonValue--boolean">{value ? "true" : "false"}</span>
+    );
+  } else if (typeof value === "undefined") {
+    return <span className="jsonValue--undefined">{value}</span>;
   } else if (typeof value === "string") {
     if (URL.canParse(value)) {
       return (
@@ -53,6 +59,6 @@ function convertJsonValueToHTML(value: unknown) {
       return <span className="jsonValue--string">{value}</span>;
     }
   } else {
-    logger.debug("unexpected value:", value);
+    console.warn("unexpected value:", value);
   }
 }
