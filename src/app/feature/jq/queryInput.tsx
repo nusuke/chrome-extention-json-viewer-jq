@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useQueryHistory } from "./historyHooks";
+import DeleteIcon from "../../../icons/delete.svg";
+import HistoryIcon from "../../../icons/history.svg";
 
 type P = {
   initialJqQuery: string;
@@ -105,12 +107,13 @@ export const QueryInput: React.FC<P> = (props) => {
             value={jqQuery}
           />
           <button
-            className="queryDeleteShareButton"
+            className="queryInputDeleteButton"
             onClick={() => {
               executeJq(".");
             }}
+            aria-label="reset input"
           >
-            Delete
+            <DeleteIcon />
           </button>
         </div>
         <div className="queryInputButtonArea">
@@ -130,8 +133,9 @@ export const QueryInput: React.FC<P> = (props) => {
           <button
             className="queryInputHistoryButton"
             onClick={() => setSuggestMode((s) => !s)}
+            aria-label="history"
           >
-            {suggestMode ? "×" : "history"}
+            {suggestMode ? "×" : <HistoryIcon />}
           </button>
         </div>
       </div>
