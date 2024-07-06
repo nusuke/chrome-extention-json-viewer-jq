@@ -1,2 +1,5 @@
-// Object.assign(global, require("jest-chrome"));
-Object.assign(global, { chrome: { runtime: { sendMessage: () => {} } } });
+Object.assign(global, {
+  chrome: {
+    runtime: { sendMessage: () => {}, onMessage: { addListener: () => {} } },
+  },
+});
