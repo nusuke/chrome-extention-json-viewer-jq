@@ -1,3 +1,4 @@
+import { logger } from "../../../lib/logger";
 import { getSurroundCharactor, surroundParentheses } from "./parentheses";
 
 /**
@@ -79,6 +80,6 @@ function convertJsonValueToHTML(value: unknown) {
       return <span className="jsonValue--string">{value}</span>;
     }
   } else {
-    console.warn("unexpected value:", value);
+    logger.debug("unexpected value:", value);
   }
 }

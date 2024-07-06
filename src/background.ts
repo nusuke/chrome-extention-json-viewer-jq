@@ -1,4 +1,3 @@
-import jq from "jq-web/jq.wasm.js";
 import { logger } from "./lib/logger";
 import { getHistory, addHistory } from "./lib/queryHistoryFromLocalStrage";
 
@@ -37,6 +36,8 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
       const json = JSON.parse(
         JSON.parse(JSON.stringify(await chrome.storage.session.get(key))).json
       );
+
+      const jq = await import("jq-web/jq.wasm.js");
 
       const res = jq.json(json, jqQuery);
       logger.debug("jq result:", res);
