@@ -104,6 +104,14 @@ export const QueryInput: React.FC<P> = (props) => {
             }}
             value={jqQuery}
           />
+          <button
+            className="queryDeleteShareButton"
+            onClick={() => {
+              executeJq(".");
+            }}
+          >
+            Delete
+          </button>
         </div>
         <div className="queryInputButtonArea">
           <button

@@ -1,61 +1,6 @@
-// ##################### reset css ###################
-input,
-button,
-textarea,
-select {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  appearance: none;
-  color: #000;
-}
-// ##################### reset css ↑ ###################
+@import "variables";
+@import "reset";
 
-// ##################### 変数 ###################
-
-$app-gray: rgb(70, 70, 70);
-$json-font-size: 0.85rem;
-
-// 基本色
-$background-color: rgb(40, 44, 52);
-$text-color: rgb(171, 178, 191);
-$white-color: rgb(220, 223, 228);
-
-// JSON要素の色
-$key-color: rgb(97, 175, 239);
-$string-color: rgb(152, 195, 121);
-$number-color: rgb(209, 154, 102);
-$boolean-color: rgb(198, 120, 221);
-$undefined-color: rgb(224, 108, 117);
-
-// 構造要素の色
-$punctuation-color: rgb(86, 92, 100);
-
-// ハイライト色
-$highlight-color: rgb(58, 64, 74);
-
-$button-background: rgb(
-  86,
-  92,
-  100
-); // 濃いグレー（既存の punctuation-color と同じ）
-$button-text: rgb(
-  220,
-  223,
-  228
-); // 明るいグレー（既存の text-color より少し明るく）
-$button-hover-background: rgb(
-  97,
-  175,
-  239
-); // 明るい青（既存の key-color と同じ）
-$button-hover-text: rgb(255, 255, 255); // 白
-$button-active-background: rgb(78, 140, 191); // hover 状態より少し暗い青
-$button-active-text: rgb(255, 255, 255); // 白
-
-// ##################### 変数 ↑ ###################
 body {
   padding: 8px;
   display: flex;

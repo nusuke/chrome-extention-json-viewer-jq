@@ -8,7 +8,7 @@
     "build": "webpack --mode production",
     "test": "jest"
   },
-  "author": "",
+  "author": "nusuke",
   "license": "MIT",
   "devDependencies": {
     "@types/chrome": "^0.0.261",
