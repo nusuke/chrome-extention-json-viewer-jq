@@ -21,10 +21,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # jest-chromeの強制installのため、force
       - name: Build
         run: |
-          npm ci --force 
+          npm ci
           npm run build
 
       - name: Test

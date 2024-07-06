@@ -19,7 +19,7 @@
 # 開発環境用意
 
 ```
-npm ci --force
+npm ci
 npm run build:debug
 ```
 
