@@ -1,4 +1,3 @@
-import { logger } from "../../../lib/logger";
 import { getSurroundCharactor, surroundParentheses } from "./parentheses";
 
 /**
@@ -8,7 +7,14 @@ import { getSurroundCharactor, surroundParentheses } from "./parentheses";
  */
 export function convertJSONToHTML(json: JSON) {
   const nodes = [];
-
+  // booleanなどが単一で入ってきた際
+  if (Object.entries(json).length === 0) {
+    nodes.push(
+      <div className="jsonRow">
+        <span className="jsonValue">{convertJsonValueToHTML(json)}</span>
+      </div>
+    );
+  }
   for (const [key, value] of Object.entries(json)) {
     if (typeof value === "object") {
       const surruondChar = getSurroundCharactor(value);

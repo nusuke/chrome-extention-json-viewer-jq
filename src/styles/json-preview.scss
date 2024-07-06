@@ -69,7 +69,7 @@ button:focus {
 }
 
 .jsonPreview {
-  padding-top: 24px;
+  padding-top: 8px;
   .jsonKey {
     color: $text-color;
 
@@ -151,17 +151,14 @@ button:focus {
   }
 }
 
-// FIXME リファクタで場所を移す
 .queryInput {
   width: 100%;
   max-width: 800px;
   display: flex;
-  position: fixed;
-  top: 4px;
-  z-index: 900;
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  position: relative;
   &SearchBox {
     display: flex;
     justify-content: start;
@@ -178,10 +175,14 @@ button:focus {
 
   &Input {
     width: 100%;
-    min-height: 24px;
+    height: 100%;
     padding-left: 8px;
   }
 
+  &ButtonArea {
+    display: flex;
+    justify-content: center;
+  }
   &ShareButton {
     background: $button-active-background;
     border-radius: 2px;
@@ -190,26 +191,36 @@ button:focus {
     padding: 4px 8px;
   }
   &HistoryButton {
+    background-color: rgba($app-gray, 0.7);
+    color: $button-active-text;
+    padding: 4px 8px;
+    border-radius: 2px;
+  }
+
+  &DeleteButton {
     position: absolute;
-    right: 20px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     background-color: rgba($app-gray, 0.7);
     color: $button-active-text;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 
   &Suggest {
-    position: relative;
+    position: absolute;
+    z-index: 10;
+    top: 24px;
     overflow-y: scroll;
     margin: 0 16px 0px;
     padding: 8px 16px 8px;
     max-height: 20vh;
     width: 75%;
     border-radius: 0 0 8px 8px;
-    background-color: rgba(42, 41, 41, 0.8);
+    background-color: $background-color;
     list-style: none;
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));
 
     &Button {
       min-width: 90%;
@@ -217,20 +228,29 @@ button:focus {
       justify-content: flex-start;
       color: $white-color;
       font-size: large;
+      &:hover {
+        background-color: $button-hover-background;
+      }
     }
     &--active {
       padding: 0 8px;
-      background-color: $highlight-color;
+      background-color: $button-hover-background;
     }
     &RemoveButton {
       color: $white-color;
       width: 64px;
+      &:hover {
+        background-color: $button-hover-background;
+      }
     }
 
     &AllRemoveButton {
       border-top: solid 1px $white-color;
       color: $white-color;
       width: 100%;
+      &:hover {
+        background-color: $button-hover-background;
+      }
     }
 
     &List {

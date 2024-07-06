@@ -3,7 +3,7 @@ import { logger } from "./lib/logger";
 import { getHistory, addHistory } from "./lib/queryHistoryFromLocalStrage";
 
 type MessageType = {
-  type: "road" | "query";
+  type: "road" | "query" | "setHistory";
   text: string;
 };
 const key = "json";
@@ -42,17 +42,20 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
       });
       if (!tab.id) return;
 
-      // 履歴保存
-      if (jqQuery) {
-        const histories = await getHistory();
-        await addHistory(jqQuery, histories);
-      }
-
       chrome.tabs.sendMessage(tab.id, {
         filteredJSON: res,
       });
     } catch (e) {
       logger.debug(e);
     }
+  } else if (message.type === "setHistory") {
+    const jqQuery = message.text;
+    // 履歴保存
+    if (jqQuery) {
+      const histories = await getHistory();
+      await addHistory(jqQuery, histories);
+    }
+  } else {
+    console.error("unknown type message", message.type);
   }
 });

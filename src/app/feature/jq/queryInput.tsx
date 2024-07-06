@@ -1,24 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  getHistory,
-  remoevHistoryAll,
-  removeHistory,
-} from "../../../lib/queryHistoryFromLocalStrage";
+import { useQueryHistory } from "./historyHooks";
 
 type P = {
   initialJqQuery: string;
 };
 export const QueryInput: React.FC<P> = (props) => {
   const [jqQuery, setJqQuery] = useState<string>(props.initialJqQuery);
-  const [jqQueryHistories, setJqQueryHistory] = useState<string[]>([]);
-  const [historyKeyIndex, setHistoryKeyIndex] = useState(-1);
-  const [suggestMode, setSuggestMode] = useState(false);
-  const queryInputSuggestRef = useRef<HTMLButtonElement>(null);
 
-  const updateHistoryFromLocalStrage = async () => {
-    const res = await getHistory();
-    setJqQueryHistory(res ?? []);
-  };
+  const {
+    updateHistoryFromLocalStrage,
+    setSuggestMode,
+    setHistoryKeyIndex,
+    suggestMode,
+    jqQueryHistories,
+    allRemoveHisotryHandler,
+    removeHisotryHandler,
+    execQueryHistory,
+    selectedHistoryQuery,
+  } = useQueryHistory(setJqQuery);
+
+  const queryInputSuggestRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     chrome.runtime.sendMessage({
@@ -33,14 +34,7 @@ export const QueryInput: React.FC<P> = (props) => {
     setSuggestMode(false);
   }, [props.initialJqQuery]);
 
-  // ↑↓で履歴をinput要素にセットする
-  useEffect(() => {
-    if (historyKeyIndex >= 0 && jqQueryHistories.length > historyKeyIndex) {
-      setJqQuery(jqQueryHistories[historyKeyIndex]);
-    }
-  }, [historyKeyIndex]);
-
-  // Enterや送信ボタンでjq発火
+  // jq発火
   const executeJq = async (jqQuery: string) => {
     setSuggestMode(false);
     await chrome.runtime.sendMessage({
@@ -56,6 +50,11 @@ export const QueryInput: React.FC<P> = (props) => {
     url.searchParams.set("chromeExtentionJqQuery", jqQuery);
     history.pushState(null, "", url.toString());
   };
+
+  // 入力されるたびに実行
+  useEffect(() => {
+    executeJq(jqQuery);
+  }, [jqQuery]);
 
   return (
     <form
@@ -77,8 +76,9 @@ export const QueryInput: React.FC<P> = (props) => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
+                suggestMode ? execQueryHistory() : executeJq(jqQuery);
+
                 setSuggestMode(false);
-                executeJq(jqQuery);
                 e.preventDefault();
                 e.stopPropagation();
               }
@@ -104,6 +104,21 @@ export const QueryInput: React.FC<P> = (props) => {
             }}
             value={jqQuery}
           />
+        </div>
+        <div className="queryInputButtonArea">
+          <button
+            className="queryInputShareButton"
+            onClick={() => {
+              executeJq(jqQuery);
+
+              chrome.runtime.sendMessage({
+                type: "setHistory",
+                text: jqQuery,
+              });
+            }}
+          >
+            Set URL
+          </button>
           <button
             className="queryInputHistoryButton"
             onClick={() => setSuggestMode((s) => !s)}
@@ -111,12 +126,6 @@ export const QueryInput: React.FC<P> = (props) => {
             {suggestMode ? "×" : "history"}
           </button>
         </div>
-        <button
-          className="queryInputShareButton"
-          onClick={() => executeJq(jqQuery)}
-        >
-          Set URL
-        </button>
       </div>
 
       {suggestMode && jqQueryHistories.length > 0 && (
@@ -125,23 +134,22 @@ export const QueryInput: React.FC<P> = (props) => {
             <li key={queryHistory} className="queryInputSuggestList">
               <button
                 className={`${
-                  queryHistory === jqQuery ? "queryInputSuggest--active" : ""
+                  queryHistory === selectedHistoryQuery
+                    ? "queryInputSuggest--active"
+                    : ""
                 } queryInputSuggestButton`}
-                onClick={() => {
-                  executeJq(queryHistory);
-                }}
-                ref={queryHistory === jqQuery ? queryInputSuggestRef : null}
+                onClick={execQueryHistory}
+                ref={
+                  queryHistory === selectedHistoryQuery
+                    ? queryInputSuggestRef
+                    : null
+                }
               >
                 {queryHistory}
               </button>
               <button
                 className="queryInputSuggestRemoveButton"
-                onClick={() => {
-                  if (confirm(`Can I delete the query "${queryHistory}"?`)) {
-                    removeHistory(queryHistory, jqQueryHistories);
-                    window.location.reload();
-                  }
-                }}
+                onClick={() => removeHisotryHandler(queryHistory)}
               >
                 ×
               </button>
@@ -150,12 +158,7 @@ export const QueryInput: React.FC<P> = (props) => {
           <li>
             <button
               className="queryInputSuggestAllRemoveButton"
-              onClick={async () => {
-                if (confirm(`Delete all`)) {
-                  await remoevHistoryAll();
-                  window.location.reload();
-                }
-              }}
+              onClick={allRemoveHisotryHandler}
             >
               all remove.
             </button>
