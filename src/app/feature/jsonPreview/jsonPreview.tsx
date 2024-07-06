@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { convertJSONToHTML } from "./convertJSONToHTML";
 import { getSurroundCharactor, surroundParentheses } from "./parentheses";
+import { messageType } from "../../../background";
 
 type P = { targetJson: JSON };
 export const JsonPreview: React.FC<P> = (props: P) => {
   useEffect(() => {
     chrome.runtime.sendMessage({
-      type: "road",
+      type: messageType.load,
       text: JSON.stringify(props.targetJson),
     });
   }, []);

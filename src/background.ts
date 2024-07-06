@@ -2,8 +2,13 @@ import jq from "jq-web/jq.wasm.js";
 import { logger } from "./lib/logger";
 import { getHistory, addHistory } from "./lib/queryHistoryFromLocalStrage";
 
+export const messageType = {
+  load: "load",
+  query: "query",
+  setHistory: "setHistory",
+} as const;
 type MessageType = {
-  type: "road" | "query" | "setHistory";
+  type: keyof typeof messageType;
   text: string;
 };
 const key = "json";
@@ -11,7 +16,7 @@ const key = "json";
 chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
   logger.debug("message 受信", message);
   if (!sender.tab?.id) return;
-  if (message.type == "road") {
+  if (message.type == messageType.load) {
     const text = message.text;
     try {
       const json = JSON.parse(text);
@@ -25,7 +30,7 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
     } catch (e) {
       console.error(e);
     }
-  } else if (message.type == "query") {
+  } else if (message.type == messageType.query) {
     // jq filtering
     const jqQuery = message.text;
     try {
@@ -48,7 +53,7 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
     } catch (e) {
       logger.debug(e);
     }
-  } else if (message.type === "setHistory") {
+  } else if (message.type === messageType.setHistory) {
     const jqQuery = message.text;
     // 履歴保存
     if (jqQuery) {

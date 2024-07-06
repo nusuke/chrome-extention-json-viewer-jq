@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useQueryHistory } from "./historyHooks";
 import DeleteIcon from "../../../icons/delete.svg";
 import HistoryIcon from "../../../icons/history.svg";
+import { messageType } from "../../../background";
 
 type P = {
   initialJqQuery: string;
@@ -25,7 +26,7 @@ export const QueryInput: React.FC<P> = (props) => {
 
   useEffect(() => {
     chrome.runtime.sendMessage({
-      type: "query",
+      type: messageType.query,
       text: props.initialJqQuery,
     });
 
@@ -40,7 +41,7 @@ export const QueryInput: React.FC<P> = (props) => {
   const executeJq = async (jqQuery: string) => {
     setSuggestMode(false);
     await chrome.runtime.sendMessage({
-      type: "query",
+      type: messageType.query,
       text: jqQuery,
     });
 
@@ -123,7 +124,7 @@ export const QueryInput: React.FC<P> = (props) => {
               executeJq(jqQuery);
 
               chrome.runtime.sendMessage({
-                type: "setHistory",
+                type: messageType.setHistory,
                 text: jqQuery,
               });
             }}
