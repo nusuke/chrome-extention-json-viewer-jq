@@ -23,9 +23,9 @@ jobs:
 
       - name: Build
         run: |
-          npm ci
-          npm run build
+          pnpm i
+          pnpm run build
 
       - name: Test
         run: |
-          npm run test
+          pnpm run test
