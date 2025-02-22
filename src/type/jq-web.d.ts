@@ -1,3 +1,3 @@
-declare module "jq-web/jq.wasm.js" {
+declare module "jq-web/jq.js" {
   function json(json: unknown, jqQuery: string): string | undefined | null;
 }
