@@ -16,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -23,9 +27,9 @@ jobs:
 
       - name: Build
         run: |
-          npm ci
-          npm run build
+          pnpm i
+          pnpm run build
 
       - name: Test
         run: |
-          npm run test
+          pnpm run test

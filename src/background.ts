@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener(async (message: MessageType, sender) => {
         JSON.parse(JSON.stringify(await chrome.storage.session.get(key))).json
       );
 
-      const jq = await import("jq-web/jq.wasm.js");
+      const jq = await import("jq-web/jq.js");
 
       const res = jq.json(json, jqQuery);
       logger.debug("jq result:", res);

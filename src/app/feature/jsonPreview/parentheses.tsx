@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 type SurroundChars = { start: string; end: string };
 /**
  * Object,Arrayを判別
@@ -21,7 +23,7 @@ export function getSurroundCharactor(value: unknown): SurroundChars {
  * @returns
  */
 export function surroundParentheses(
-  text: JSX.Element[],
+  text: ReactNode[],
   surroundChars: SurroundChars
 ) {
   return (
